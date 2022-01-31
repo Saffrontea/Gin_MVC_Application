@@ -7,14 +7,14 @@ package decree
 import (
 	"Gin_MVC/model/database"
 	"encoding/xml"
-	"github.com/go-git/go-git"
+	"github.com/go-git/go-git/v5"
 	"net/http"
 	"os"
 	"path"
 	"time"
 )
 
-const DECREE_DIR = "decrees"
+const DecreeDir = "decrees"
 
 type Decree struct {
 	Id int `gorm:"primaryKey;autoIncrement"`
@@ -29,7 +29,7 @@ type Decree struct {
 /*
 	法令取得
 */
-func GetDecree(id string) (Decree, error) {
+func GetDecree(id int) (Decree, error) {
 	decree := Decree{}
 	err := database.DB.Find(&decree, "Id", id).Error
 	return decree, err
@@ -69,7 +69,7 @@ func GetTodoyUpdate() error {
 func GetDecreeFromAPI(Id string, date string) {
 	var l Law
 	var d Decree
-	dpath := path.Join(DECREE_DIR, Id)
+	dpath := path.Join(DecreeDir, Id)
 	get, err := http.Get("https://elaws.e-gov.go.jp/api/1/lawdata/" + Id)
 	if err != nil {
 		return
@@ -143,7 +143,7 @@ func GetDecreeFromAPI(Id string, date string) {
 }
 
 func (decree Decree) getDecree() (*Law, error) {
-	f, e := os.Open(path.Join(DECREE_DIR, decree.DecreeReference, decree.DecreeReference+".xml"))
+	f, e := os.Open(path.Join(DecreeDir, decree.DecreeReference, decree.DecreeReference+".xml"))
 	if e != nil {
 		return nil, e
 	}

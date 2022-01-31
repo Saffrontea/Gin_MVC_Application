@@ -89,3 +89,10 @@ func GetLoginUser(c *gin.Context) (*user.User, bool, error) {
 	}
 	return &usr, loginState, nil
 }
+
+func LogoutUser(c *gin.Context) error {
+	session := sessions.Default(c)
+	session.Delete("User")
+	session.Delete("LoginTime")
+	return session.Save()
+}

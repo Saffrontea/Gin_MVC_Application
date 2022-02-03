@@ -81,7 +81,7 @@ func GetDecreeFromAPI(Id string, date string) {
 
 	d = Decree{
 		DecreeReference: Id,
-		Name:            l.LawBody.LawTitle.Text,
+		Name:            l.LawBody.LawTitle.Line[0],
 		LastUpdate:      time.Now(),
 	}
 	_, e := os.Open(dpath)
@@ -137,7 +137,10 @@ func GetDecreeFromAPI(Id string, date string) {
 			return
 		}
 
-		UpdateDecree(d)
+		err = UpdateDecree(d)
+		if err != nil {
+			return
+		}
 	}
 
 }

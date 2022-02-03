@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	aqwari.net/xml v0.0.0-20210331023308-d9421b293817 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
@@ -43,8 +44,12 @@ require (
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
+	golang.org/x/mod v0.3.0 // indirect
 	golang.org/x/net v0.0.0-20210326060303-6b1517762897 // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
+	golang.org/x/text v0.3.3 // indirect
+	golang.org/x/tools v0.0.0-20200821192610-3366bbee4705 // indirect
+	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

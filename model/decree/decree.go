@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-const DecreeDir = "decrees"
+const DecreeDir = "resource/decree"
 
 type Decree struct {
 	Id int `gorm:"primaryKey;autoIncrement"`
@@ -41,7 +41,7 @@ func GetDecree(id int) (Decree, error) {
 */
 func CreateDecree(decree Decree) error {
 	//TODO: バッチ処理でこれを呼び出す
-	return database.DB.Create(decree).Error
+	return database.DB.Create(&decree).Error
 }
 
 func UpdateDecree(decree Decree) error {
@@ -145,7 +145,7 @@ func GetDecreeFromAPI(Id string, date string) {
 
 }
 
-func (decree Decree) getDecree() (*Law, error) {
+func (decree Decree) GetDecree() (*Law, error) {
 	f, e := os.Open(path.Join(DecreeDir, decree.DecreeReference, decree.DecreeReference+".xml"))
 	if e != nil {
 		return nil, e

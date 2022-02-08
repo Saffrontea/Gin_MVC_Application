@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.LawBody.LawTitle.Text}}</title>
+<!--    <style>-->
+<!--        div.article{-->
+<!--            border: 1px #000 solid;-->
+<!--        }-->
+<!--        body{-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        table{-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            flex-direction: row;-->
+<!--        }-->
+<!--    </style>-->
+</head>
+<body>
+  {{with .Law}}
+    <h2 class="lawNum">{{.LawNum}}</h2>
+  {{if .LawBody}}
+    <h2 class="lawTitle">{{.LawBody.LawTitle.Text}}</h2>
+  <div class="main">
+      {{if .LawBody.EnactStatement}}
+      <div class="enactStatement">
+        {{range .LawBody.EnactStatement}}
+        <p>{{.Text}}</p>
+        {{end}}
+      </div>
+      {{end}}
+      {{with .LawBody.MainProvision}}
+      <div class="mainProvision">
+          {{if .Part}}
+                <div class="part">
+                {{range .Part}}
+                    {{template "Part" .}}
+                {{end}}
+                </div>
+            {{end}}
+          {{with .Chapter}}
+            <div class="chapter">
+                {{range .}}
+                    {{template "Chapter" .}}
+                {{end}}
+            </div>
+          {{end}}
+          {{with .Section}}
+            <div class="section">
+                {{range .}}
+                    {{template "Section" .}}
+                {{end}}
+            </div>
+          {{end}}
+          {{with .Article}}
+            <div class="article">
+                {{range .}}
+                    {{template "Article" .}}
+                {{end}}
+            </div>
+          {{end}}
+          {{with .Paragraph}}
+            <div class="paragraph">
+                {{range .}}
+                    {{template "Paragraph" .}}
+                {{end}}
+            </div>
+          {{end}}
+      </div>
+      {{end}}
+  </div>
+  {{end}}
+{{end}}
+
+</body>
+</html>
+
+
+{{define "Part" }}
+    {{if .PartTitle}}
+        <p>{{.PartTitle.Text}}</p>
+    {{end}}
+    {{if .Article}}
+    <div class="article">
+        {{range .Article}}
+            {{template "Article" .}}
+        {{end}}
+    </div>
+    {{end}}
+    {{if .Chapter}}
+    <div class="chapter">
+        {{range .Chapter}}
+            {{template "Chapter" .}}
+        {{end}}
+    </div>
+    {{end}}
+{{end}}
+
+{{define "Article"  }}
+    {{if .ArticleCaption}}
+        <p>{{.ArticleCaption.Text}}</p>
+    {{end}}
+    {{if .ArticleTitle}}
+        <p>{{.ArticleTitle.Text}}</p>
+
+    {{end}}
+    {{if .Paragraph}}
+    <div class="paragraph">
+        {{range .Paragraph}}
+            {{template "Paragraph" .}}
+        {{end}}
+    </div>
+    {{end}}
+    {{if .SupplNote}}
+        <p class="supple--note">{{.SupplNote.Text}}</p>
+    {{end}}
+{{end}}
+
+{{define "Chapter"  }}
+    {{if .ChapterTitle}}
+        <p class="chapter--title">{{.ChapterTitle.Text}}</p>
+    {{end}}
+    {{if .Article}}
+        <div class="article">
+            {{range .Article}}
+                {{template "Article" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .Section}}
+        <div class="section">
+            {{range .Section}}
+                {{template "Section" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Section"  }}
+    {{if .SectionTitle}}
+        <p>{{.SectionTitle.Text}}</p>
+    {{end}}
+    {{if .Article}}
+        <div class="article">
+            {{range .Article}}
+            {{template "Article" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .Subsection}}
+        <div class="subsection">
+            {{range .Subsection}}
+            {{template "Subsection" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .Division}}
+        <div class="division">
+            {{range .Division}}
+            {{template "Division" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Subsection"  }}
+    {{if .SubsectionTitle}}
+        <p class="subsection--title">{{.SubsectionTitle.Text}}</p>
+    {{end}}
+    {{if .Article}}
+        <div class="article">
+            {{range .Article}}
+                {{template "Article" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .Division}}
+        <div class="division">
+            {{range .Division}}
+                {{template "Division" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Paragraph"  }}
+    {{if .ParagraphCaption}}
+        <p class="paragraph--caption">{{.ParagraphCaption.Text}}</p>
+    {{end}}
+    {{if .ParagraphNum}}
+        <p class="paragraph--num>">{{.ParagraphNum.Text}}</p>
+    {{end}}
+    {{if .ParagraphSentence}}
+        {{range .ParagraphSentence.Sentence}}
+            <p class="paragraph--sentence>">{{.}}</p>
+        {{end}}
+    {{end}}
+    {{if .AmendProvision}}
+        <div class="amendprovision">
+            {{range .AmendProvision}}
+                {{template "AmendProvision" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{with .Item}}
+        <div class="item">
+            {{range .}}
+                {{template "Item" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Division"  }}
+    {{if .DivisionTitle}}
+        <p class="division--title">{{.DivisionTitle}}</p>
+    {{end}}
+    {{if .Article}}
+        <div class="article">
+            {{range .Article}}
+                {{template "Article" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Item"  }}
+    {{if .ItemTitle}}
+        <p class="item--title">{{.ItemTitle.Text}}</p>
+    {{end}}
+    {{with .ItemSentence}}
+    <div class="sentence">
+        {{template "Sentence" .}}
+    </div>
+    {{end}}
+    {{if .Subitem1}}
+        <div class="subitem1">
+            {{range .Subitem1}}
+                {{template "Subitem1" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .TableStruct}}
+        <div class="tablestruct">
+            {{range .TableStruct}}
+                    {{template "TableStruct" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .FigStruct}}
+        <div class="figStruct">
+            {{range .FigStruct}}
+                {{template "FigStruct" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .StyleStruct}}
+        <div class="stylestruct">
+            {{range .StyleStruct}}
+                {{template "StyleStruct" .}}
+            {{end}}
+        </div>
+    {{end}}
+    {{if .List}}
+        <div class="list">
+            {{range .List}}
+                {{template "List" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "Sentence"  }}
+    {{range .Sentence}}
+        <p class="sentence--p">{{.}}</p>
+    {{end}}
+    {{range $columnIndex , $columnData := .Column}}
+        {{if eq $columnIndex 0}}
+             <p class="sentence--title">{{$columnData}}</p>
+         {{else}}
+            <p class="sentence--col">{{$columnData}}</p>
+        {{end}}
+    {{end}}
+    {{with .Table}}
+    <p class="sentence--table">{{.}}</p>
+    {{/*<!--TODO-->*/}}
+    {{end}}
+{{end}}
+
+
+{{define "AmendProvision"  }}
+    {{if .AmendProvisionSentence}}
+        <p class="amendprovision-sentence">{{.AmendProvisionSentence.Sentence}}</p>
+    {{end}}
+    {{if .NewProvision}}
+        <div class="new--provision">
+            {{range .NewProvision}}
+                {{template "NewProvision" .}}
+            {{end}}
+        </div>
+    {{end}}
+{{end}}
+
+{{define "TableStruct"  }}
+    <p class="tablestruct--title">{{.TableStructTitle}}</p>
+    {{with .Table}}
+       {{template "Table" .}}
+    {{end}}
+{{end}}
+
+{{define "Table"  }}
+<table class="talbestruct--table">
+    {{with .TableHeaderRow}}
+    <thead>
+    {{range .}}
+    <tr>
+        {{range .TableHeaderColumn}}
+        <th>
+            {{.Text}}
+        </th>
+        {{end}}
+    </tr>
+    {{end}}
+    </thead>
+    {{end}}
+    {{with .TableRow}}
+    {{range .}}
+    <tr>
+        {{range .TableColumn}}
+        <td>
+            {{with .Part}}
+            <div class="part">
+                {{range .}}
+                {{template "Part" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Chapter}}
+            <div class="chapter">
+                {{range .}}
+                {{template "Chapter" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Section}}
+            <div class="section">
+                {{range .}}
+                {{template "Section" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Subsection}}
+            <div class="subsection">
+                {{range .}}
+                {{template "Subsection" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Division}}
+            <div class="division">
+                {{range .}}
+                {{template "Division" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Article}}
+            <div class="article">
+                {{range .}}
+                {{template "Article" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Paragraph}}
+            <div class="paragraph">
+                {{range .}}
+                {{template "Paragraph" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Item}}
+            <div class="item">
+                {{range .}}
+                {{template "Item" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{template "Subitems" .}}
+            {{with .FigStruct}}
+            <div class="figstruct">
+                {{range .}}
+                {{template "FigStruct" .}}
+                {{end}}
+            </div>
+            {{end}}
+            {{with .Remarks}}
+            <div class="item">
+                {{template "Remarks" .}}
+            </div>
+            {{end}}
+            {{range .Sentence}}
+            <div class="sentence"><p>{{.}}</p></div>
+            {{end}}
+        </td>
+        {{end}}
+    </tr>
+    {{end}}
+    {{end}}
+</table>
+{{end}}
+
+
+{{define "FigStruct"  }}
+    {{with .FigStructTitle}}
+        <p class="">{{.Text}}</p>
+<!--TODO-->
+    {{end}}
+    {{with .Remarks}}
+        <div class="remarks">
+        {{range .}}
+        {{template "Remarks" .}}
+        {{end}}
+        </div>
+    {{end}}
+    {{if .Fig}}
+        <img src="{{.Fig.SrcAttr}}" alt="{{.FigStructTitle}}">
+    {{end}}
+{{end}}
+
+{{define "StyleStruct"  }}
+    {{if .Text}}
+        <p>{{.Text}}</p>
+{{/*<!--TODO-->*/}}
+    {{end}}
+{{end}}
+{{define "Remarks"  }}
+
+{{end}}
+
+{{define "List"  }}
+    {{with .ListSentence}}
+    {{end}}
+    {{with .Sublist1}}
+    {{end}}
+{{end}}
+
+{{define "ListSentence"}}
+    {{with .Sentence}}
+        {{range .}}
+            <p>{{.}}</p>
+        {{end}}
+    {{end}}
+    {{with .Column}}
+        {{range .}}
+            <p>{{.}}</p>
+        {{end}}
+    {{end}}
+{{end}}
+{{define "NewProvision"  }}
+    {{if .LawTitle}}
+        <p class="lawTitle">{{.LawTitle.Text}}</p>
+    {{end}}
+{{end}}
+
+<!--Complete:
+    Part,Article,Chapter,Section,Subsection,Paragraph,Division,ItemSentence,AmendProvision,Item,TableStruct,Table,TableHeaderRow,TableHeaderColumn
+    TableRow,TableColumn,SubItem1
+-->

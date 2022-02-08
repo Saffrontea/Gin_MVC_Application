@@ -7,9 +7,7 @@ import (
 
 func CreateLaw(file *os.File) (*Law, error) {
 	var l Law
-	var r []byte
-	file.Read(r)
-	err := xml.Unmarshal(r, &l)
+	err := xml.NewDecoder(file).Decode(&l)
 	if err != nil {
 		return nil, err
 	}
@@ -66,6 +64,7 @@ type EnactStatement struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
+	Text string   `xml:",innerxml"`
 }
 
 // ArticleRange ...
@@ -74,6 +73,7 @@ type ArticleRange struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
+	Text string   `xml:",innerxml"`
 }
 
 // Preamble ...
@@ -107,6 +107,7 @@ type PartTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
+	Text string   `xml:",innerxml"`
 }
 
 // Chapter ...
@@ -888,7 +889,7 @@ type AppdxFigTitle struct {
 type TableStruct struct {
 	TableStructTitle string     `xml:"TableStructTitle"`
 	Remarks          []*Remarks `xml:"Remarks"`
-	Table            string     `xml:"Table"`
+	Table            Table      `xml:"Table"`
 }
 
 // TableStructTitle ...
@@ -904,12 +905,12 @@ type TableStructTitle struct {
 type Table struct {
 	WritingModeAttr string            `xml:"WritingMode,attr,omitempty"`
 	TableHeaderRow  []*TableHeaderRow `xml:"TableHeaderRow"`
-	Table           string            `xml:"Table"`
+	TableRow        []*TableRow       `xml:"TableRow"`
 }
 
 // TableRow ...
 type TableRow struct {
-	TableColumn []string `xml:"TableColumn"`
+	TableColumn []TableColumn `xml:"TableColumn"`
 }
 
 // TableHeaderRow ...
@@ -978,7 +979,7 @@ type FigStructTitle struct {
 
 // Fig ...
 type Fig struct {
-	//	SrcAttr interface{} `xml:"src,attr"`
+	SrcAttr string `xml:"src,attr"`
 }
 
 // NoteStruct ...

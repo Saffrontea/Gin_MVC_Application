@@ -1,0 +1,525 @@
+{{define "Subitem1"  }}
+{{if .Subitem1Title}}
+<p class="subitem--title">{{.Subitem1Title.Text}}</p>
+{{end}}
+{{with .Subitem1Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem2}}
+<div class="subitem2">
+  {{range .}}
+  {{template "Subitem2" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem2"  }}
+{{if .Subitem2Title}}
+<p class="subitem--title">{{.Subitem2Title.Text}}</p>
+{{end}}
+{{with .Subitem2Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem3}}
+<div class="subitem3">
+  {{range .}}
+  {{template "Subitem3" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem3"  }}
+{{if .Subitem3Title}}
+<p class="subitem--title">{{.Subitem3Title.Text}}</p>
+{{end}}
+{{with .Subitem3Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem4}}
+<div class="subitem4">
+  {{range .}}
+  {{template "Subitem4" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem4"  }}
+{{if .Subitem4Title}}
+<p class="subitem--title">{{.Subitem4Title.Text}}</p>
+{{end}}
+{{with .Subitem4Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem5}}
+<div class="subitem5">
+  {{range .}}
+  {{template "Subitem5" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem5"  }}
+{{if .Subitem5Title}}
+<p class="subitem--title">{{.Subitem5Title.Text}}</p>
+{{end}}
+{{with .Subitem5Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem6}}
+<div class="subitem6">
+  {{range .}}
+  {{template "Subitem6" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem6"  }}
+{{if .Subitem6Title}}
+<p class="subitem--title">{{.Subitem6Title.Text}}</p>
+{{end}}
+{{with .Subitem6Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem7}}
+<div class="subitem7">
+  {{range .}}
+  {{template "Subitem7" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem7"  }}
+{{if .Subitem7Title}}
+<p class="subitem--title">{{.Subitem7Title.Text}}</p>
+{{end}}
+{{with .Subitem7Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem8}}
+<div class="subitem8">
+  {{range .}}
+  {{template "Subitem8" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem8"  }}
+{{if .Subitem8Title}}
+<p class="subitem--title">{{.Subitem8Title.Text}}</p>
+{{end}}
+{{with .Subitem8Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem9}}
+<div class="subitem9">
+  {{range .}}
+  {{template "Subitem9" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem9"  }}
+{{if .Subitem9Title}}
+<p class="subitem--title">{{.Subitem9Title.Text}}</p>
+{{end}}
+{{with .Subitem9Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .Subitem10}}
+<div class="subitem10">
+  {{range .}}
+  {{template "Subitem10" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitem10"  }}
+{{if .Subitem10Title}}
+<p class="subitem--title">{{.Subitem10Title.Text}}</p>
+{{end}}
+{{with .Subitem10Sentence}}
+<div class="sentence">
+  {{template "Sentence" .}}
+</div>
+{{end}}
+{{with .TableStruct}}
+<div class="tablestruct">
+  {{range .}}
+  {{template "TableStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .FigStruct}}
+<div class="figstruct">
+  {{range .}}
+  {{template "FigStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .StyleStruct}}
+<div class="stylestruct">
+  {{range .}}
+  {{template "StyleStruct" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .List}}
+<div class="list">
+  {{range .}}
+  {{template "List" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}
+
+{{define "Subitems"  }}
+{{with .Subitem1}}
+<div class="subitem1">
+  {{range .Subitem1}}
+  {{template "Subitem1" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem2}}
+<div class="subitem2">
+  {{range .Subitem2}}
+  {{template "Subitem2" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem3}}
+<div class="subitem3">
+  {{range .Subitem3}}
+  {{template "Subitem3" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem4}}
+<div class="subitem4">
+  {{range .Subitem4}}
+  {{template "Subitem4" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem5}}
+<div class="subitem5">
+  {{range .Subitem5}}
+  {{template "Subitem5" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem6}}
+<div class="subitem6">
+  {{range .Subitem6}}
+  {{template "Subitem6" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem7}}
+<div class="subitem7">
+  {{range .Subitem7}}
+  {{template "Subitem7" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem8}}
+<div class="subitem8">
+  {{range .Subitem8}}
+  {{template "Subitem8" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem9}}
+<div class="subitem9">
+  {{range .Subitem9}}
+  {{template "Subitem9" .}}
+  {{end}}
+</div>
+{{end}}
+{{with .Subitem10}}
+<div class="subitem10">
+  {{range .Subitem10}}
+  {{template "Subitem10" .}}
+  {{end}}
+</div>
+{{end}}
+{{end}}

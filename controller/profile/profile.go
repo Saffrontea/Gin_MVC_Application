@@ -20,6 +20,9 @@ func ProfileDisplay(c *gin.Context) {
 			decName = append(decName, getDecree)
 		}
 	}
+	if usr == nil {
+		//header := &user.User{}
+	}
 	img := usr.Image.GetImage()
 	c.HTML(200, "profile.html", gin.H{
 		"headerUser": header.GetHeaderUser(usr),

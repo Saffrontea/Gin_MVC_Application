@@ -1,6 +1,7 @@
 package router
 
 import (
+	"Gin_MVC/controller/decree"
 	"Gin_MVC/controller/discuss"
 	"Gin_MVC/controller/index"
 	"Gin_MVC/controller/login"
@@ -26,5 +27,6 @@ func GetRouter() *gin.Engine {
 	router.GET("/notify", notify.GetNotify)
 	router.GET("/profile", profile.ProfileDisplay)
 	router.GET("/editProfile", profile.EditProfileDisplay)
+	router.GET("/decree", decree.DisplayDecree)
 	return router
 }

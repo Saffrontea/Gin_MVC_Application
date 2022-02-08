@@ -39,39 +39,15 @@ func TestUser(t *testing.T) {
 		Publish:  false,
 		Notify:   notify.Notify{Notify: string(ts)},
 		Priority: priority.Priority{Priority: 100},
-		Discuss: []discuss.Discuss{
-			discuss.Discuss{
-				Id:           1,
-				Create_User:  0,
-				Discuss_Type: 0,
-				Opened:       0,
-				Content:      nil,
-			},
-		},
-		Star: []Star{
-			Star{
-				Id:   1,
-				Star: 2,
-			},
-			{
-				Star: 3,
-			},
-		},
+		Discuss:  []discuss.Discuss{},
+		Star:     []Star{},
 	}
 
 	if err := database.Transaction(func(tx *gorm.DB) error {
-		// if err := notify.CreateNotify(u.Id, tx).Error; err != nil {
-		// 	return err
-		// }
 		if err := CreateUser(&u, tx).Error; err != nil {
 			return err
 		}
-
-		// if err := priority.CreatePriority(u.Id, tx).Error; err != nil {
-		// 	return err
-		// }
 		return nil
-
 	}); err != nil {
 		log.Fatal(err.Error())
 	}

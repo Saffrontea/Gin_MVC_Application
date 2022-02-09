@@ -4,6 +4,7 @@ import (
 	"Gin_MVC/model/database"
 	"Gin_MVC/model/decree"
 	"Gin_MVC/model/discuss"
+	"Gin_MVC/model/law"
 	"Gin_MVC/model/notify"
 	"Gin_MVC/model/priority"
 	"Gin_MVC/model/user"
@@ -27,7 +28,7 @@ func TestInsertDB(t *testing.T) {
 			// panic(err)
 			return
 		}
-		law, err := decree.CreateLaw(open)
+		law, err := law.CreateLaw(open)
 		if err != nil {
 			panic(err)
 		}

@@ -6,6 +6,7 @@ package decree
 
 import (
 	"Gin_MVC/model/database"
+	"Gin_MVC/model/law"
 	"encoding/xml"
 	"net/http"
 	"os"
@@ -54,7 +55,7 @@ func GetTodoyUpdate() error {
 		return err
 	}
 	r := xml.NewDecoder(get.Body)
-	var x RequestXML
+	var x law.RequestXML
 	err = r.Decode(&x)
 	if err != nil {
 		return err
@@ -68,7 +69,7 @@ func GetTodoyUpdate() error {
 }
 
 func GetDecreeFromAPI(Id string, date string) {
-	var l Law
+	var l law.Law
 	var d Decree
 	dpath := path.Join(DecreeDir, Id)
 	get, err := http.Get("https://elaws.e-gov.go.jp/api/1/lawdata/" + Id)
@@ -146,10 +147,10 @@ func GetDecreeFromAPI(Id string, date string) {
 
 }
 
-func (decree Decree) GetDecree() (*Law, error) {
+func (decree Decree) GetDecree() (*law.Law, error) {
 	f, e := os.Open(path.Join(DecreeDir, decree.DecreeReference, decree.DecreeReference+".xml"))
 	if e != nil {
 		return nil, e
 	}
-	return CreateLaw(f)
+	return law.CreateLaw(f)
 }

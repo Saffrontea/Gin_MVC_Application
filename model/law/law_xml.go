@@ -1,4 +1,4 @@
-package decree
+package law
 
 import (
 	"encoding/xml"

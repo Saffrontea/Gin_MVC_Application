@@ -1,17 +1,18 @@
 package decree
 
 import (
-	"Gin_MVC/model/decree"
+	"Gin_MVC/model/law"
 	"encoding/xml"
-	"github.com/gin-gonic/gin"
 	"log"
 	"os"
 	"path"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func DisplayDecree(c *gin.Context) {
-	var l decree.Law
+	var l law.Law
 	var open *os.File
 	var err error
 	defer func(open *os.File) {

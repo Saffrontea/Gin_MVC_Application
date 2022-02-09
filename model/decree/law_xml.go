@@ -17,10 +17,10 @@ func CreateLaw(file *os.File) (*Law, error) {
 // Law ...
 type Law struct {
 	EraAttr             string  `xml:"Era,attr"`
-	YearAttr            int     `xml:"Year,attr"`
-	NumAttr             int     `xml:"Num,attr"`
-	PromulgateMonthAttr int     `xml:"PromulgateMonth,attr,omitempty"`
-	PromulgateDayAttr   int     `xml:"PromulgateDay,attr,omitempty"`
+	YearAttr            string  `xml:"Year,attr"`
+	NumAttr             string  `xml:"Num,attr"`
+	PromulgateMonthAttr string  `xml:"PromulgateMonth,attr,omitempty"`
+	PromulgateDayAttr   string  `xml:"PromulgateDay,attr,omitempty"`
 	LawTypeAttr         string  `xml:"LawType,attr"`
 	LangAttr            string  `xml:"Lang,attr"`
 	LawNum              string  `xml:"LawNum"`
@@ -55,7 +55,7 @@ type LawTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // EnactStatement ...
@@ -189,8 +189,8 @@ type DivisionTitle struct {
 // Article ...
 type Article struct {
 	//	NumAttr        interface{}     `xml:"Num,attr"`
-	DeleteAttr     bool            `xml:"Delete,attr,omitempty"`
-	HideAttr       bool            `xml:"Hide,attr,omitempty"`
+	// DeleteAttr     bool            `xml:"Delete,attr,omitempty"`
+	// HideAttr       bool            `xml:"Hide,attr,omitempty"`
 	ArticleCaption *ArticleCaption `xml:"ArticleCaption"`
 	ArticleTitle   *ArticleTitle   `xml:"ArticleTitle"`
 	Paragraph      []*Paragraph    `xml:"Paragraph"`
@@ -218,7 +218,7 @@ type ArticleCaption struct {
 
 // Paragraph ...
 type Paragraph struct {
-	NumAttr           int                `xml:"Num,attr"`
+	NumAttr           string             `xml:"Num,attr"`
 	OldStyleAttr      bool               `xml:"OldStyle,attr,omitempty"`
 	OldNumAttr        bool               `xml:"OldNum,attr,omitempty"`
 	HideAttr          bool               `xml:"Hide,attr,omitempty"`
@@ -684,7 +684,7 @@ type Subitem10Sentence struct {
 
 // Sentence ...
 type Sentence struct {
-	NumAttr         int             `xml:"Num,attr,omitempty"`
+	NumAttr         string          `xml:"Num,attr,omitempty"`
 	FunctionAttr    string          `xml:"Function,attr,omitempty"`
 	IndentAttr      string          `xml:"Indent,attr,omitempty"`
 	WritingModeAttr string          `xml:"WritingMode,attr,omitempty"`
@@ -698,7 +698,7 @@ type Sentence struct {
 
 // Column ...
 type Column struct {
-	NumAttr       int    `xml:"Num,attr,omitempty"`
+	NumAttr       string `xml:"Num,attr,omitempty"`
 	LineBreakAttr bool   `xml:"LineBreak,attr,omitempty"`
 	AlignAttr     string `xml:"Align,attr,omitempty"`
 	Column        string `xml:"Column"`
@@ -729,7 +729,7 @@ type SupplProvisionLabel struct {
 
 // SupplProvisionAppdxTable ...
 type SupplProvisionAppdxTable struct {
-	NumAttr                       int                `xml:"Num,attr,omitempty"`
+	NumAttr                       string             `xml:"Num,attr,omitempty"`
 	SupplProvisionAppdxTableTitle string             `xml:"SupplProvisionAppdxTableTitle"`
 	RelatedArticleNum             *RelatedArticleNum `xml:"RelatedArticleNum"`
 	TableStruct                   []*TableStruct     `xml:"TableStruct"`
@@ -746,7 +746,7 @@ type SupplProvisionAppdxTableTitle struct {
 
 // SupplProvisionAppdxStyle ...
 type SupplProvisionAppdxStyle struct {
-	NumAttr                       int                `xml:"Num,attr,omitempty"`
+	NumAttr                       string             `xml:"Num,attr,omitempty"`
 	SupplProvisionAppdxStyleTitle string             `xml:"SupplProvisionAppdxStyleTitle"`
 	RelatedArticleNum             *RelatedArticleNum `xml:"RelatedArticleNum"`
 	StyleStruct                   []*StyleStruct     `xml:"StyleStruct"`
@@ -763,7 +763,7 @@ type SupplProvisionAppdxStyleTitle struct {
 
 // SupplProvisionAppdx ...
 type SupplProvisionAppdx struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	ArithFormulaNum   *ArithFormulaNum   `xml:"ArithFormulaNum"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	ArithFormula      []*ArithFormula    `xml:"ArithFormula"`
@@ -771,7 +771,7 @@ type SupplProvisionAppdx struct {
 
 // AppdxTable ...
 type AppdxTable struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	AppdxTableTitle   string             `xml:"AppdxTableTitle"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	TableStruct       []*TableStruct     `xml:"TableStruct"`
@@ -790,7 +790,7 @@ type AppdxTableTitle struct {
 
 // AppdxNote ...
 type AppdxNote struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	AppdxNoteTitle    string             `xml:"AppdxNoteTitle"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	NoteStruct        []*NoteStruct      `xml:"NoteStruct"`
@@ -810,7 +810,7 @@ type AppdxNoteTitle struct {
 
 // AppdxStyle ...
 type AppdxStyle struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	AppdxStyleTitle   string             `xml:"AppdxStyleTitle"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	StyleStruct       []*StyleStruct     `xml:"StyleStruct"`
@@ -828,7 +828,7 @@ type AppdxStyleTitle struct {
 
 // AppdxFormat ...
 type AppdxFormat struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	AppdxFormatTitle  string             `xml:"AppdxFormatTitle"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	FormatStruct      []*FormatStruct    `xml:"FormatStruct"`
@@ -863,13 +863,13 @@ type ArithFormulaNum struct {
 
 // ArithFormula ...
 type ArithFormula struct {
-	NumAttr int `xml:"Num,attr,omitempty"`
+	NumAttr string `xml:"Num,attr,omitempty"`
 	*Any
 }
 
 // AppdxFig ...
 type AppdxFig struct {
-	NumAttr           int                `xml:"Num,attr,omitempty"`
+	NumAttr           string             `xml:"Num,attr,omitempty"`
 	AppdxFigTitle     string             `xml:"AppdxFigTitle"`
 	RelatedArticleNum *RelatedArticleNum `xml:"RelatedArticleNum"`
 	FigStruct         []*FigStruct       `xml:"FigStruct"`
@@ -1138,5 +1138,5 @@ type Sub string
 
 // Any ...
 type Any struct {
-	XMLName xml.Name `xml:"any"`
+	XMLName xml.Name //`xml:"any"`
 }

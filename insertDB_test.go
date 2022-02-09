@@ -29,6 +29,7 @@ func TestInsertDB(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
+		t.Log(law.LawBody.LawTitle.Text)
 		err = decree.CreateDecree(
 			decree.Decree{
 				DecreeReference: entry.Name(),

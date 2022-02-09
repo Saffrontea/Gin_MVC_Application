@@ -7,11 +7,12 @@ package decree
 import (
 	"Gin_MVC/model/database"
 	"encoding/xml"
-	"github.com/go-git/go-git/v5"
 	"net/http"
 	"os"
 	"path"
 	"time"
+
+	"github.com/go-git/go-git/v5"
 )
 
 const DecreeDir = "resource/decree"
@@ -74,7 +75,7 @@ func GetDecreeFromAPI(Id string, date string) {
 	if err != nil {
 		return
 	}
-	err = xml.NewDecoder(get.Body).Decode(l)
+	err = xml.NewDecoder(get.Body).Decode(&l)
 	if err != nil {
 		return
 	}

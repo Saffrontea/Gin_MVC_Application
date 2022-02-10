@@ -3,7 +3,7 @@ package law
 import "encoding/xml"
 
 type RequestXML struct {
-	XMLName xml.Name `xml:"RequestXML"`
+	XMLName xml.Name `xml:"DataRoot"`
 	Text    string   `xml:",chardata"`
 	Result  struct {
 		Text    string `xml:",chardata"`
@@ -31,5 +31,25 @@ type RequestXML struct {
 			EnforcementFlg        string `xml:"EnforcementFlg"`
 			AuthFlg               string `xml:"AuthFlg"`
 		} `xml:"LawNameListInfo"`
+	} `xml:"ApplData"`
+}
+
+type RequestRespXML struct {
+	XMLName xml.Name `xml:"DataRoot"`
+	Text    string   `xml:",chardata"`
+	Result  struct {
+		Text    string `xml:",chardata"`
+		Code    string `xml:"Code"`
+		Message string `xml:"Message"`
+	} `xml:"Result"`
+	ApplData struct {
+		Text        string `xml:",chardata"`
+		LawId       string `xml:"LawId"`
+		LawNum      string `xml:"LawNum"`
+		LawFullText struct {
+			Text string `xml:",chardata"`
+			Law  Law    `xml:"Law"`
+		} `xml:"LawFullText"`
+		ImageData string `xml:"ImageData"`
 	} `xml:"ApplData"`
 }

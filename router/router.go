@@ -7,6 +7,7 @@ import (
 	"Gin_MVC/controller/login"
 	"Gin_MVC/controller/notify"
 	"Gin_MVC/controller/profile"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"

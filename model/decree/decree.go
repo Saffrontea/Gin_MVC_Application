@@ -8,12 +8,14 @@ import (
 	"Gin_MVC/model/database"
 	"Gin_MVC/model/law"
 	"encoding/xml"
+	"log"
 	"net/http"
 	"os"
 	"path"
 	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
 const DecreeDir = "resource/decree"
@@ -62,7 +64,9 @@ func GetTodoyUpdate() error {
 	}
 	if x.Result.Code == "0" {
 		for _, s := range x.ApplData.LawNameListInfo {
+			log.Println(s.LawId)
 			GetDecreeFromAPI(s.LawId, x.ApplData.Date)
+			time.Sleep(10 * time.Millisecond)
 		}
 	}
 	return nil
@@ -70,77 +74,106 @@ func GetTodoyUpdate() error {
 
 func GetDecreeFromAPI(Id string, date string) {
 	var l law.Law
+	var r law.RequestRespXML
 	var d Decree
 	dpath := path.Join(DecreeDir, Id)
 	get, err := http.Get("https://elaws.e-gov.go.jp/api/1/lawdata/" + Id)
 	if err != nil {
 		return
 	}
-	err = xml.NewDecoder(get.Body).Decode(&l)
+	log.Println(get.StatusCode)
+	err = xml.NewDecoder(get.Body).Decode(&r)
+	log.Println(r.ApplData.LawFullText)
+	// err = xml.Unmarshal([]byte(r.ApplData.LawFullText.Law), &l)
+	l = r.ApplData.LawFullText.Law
 	if err != nil {
+		log.Println(err)
 		return
 	}
-
+	log.Println(l.LawBody.LawTitle)
 	d = Decree{
 		DecreeReference: Id,
-		Name:            l.LawBody.LawTitle.Line[0],
+		Name:            l.LawBody.LawTitle.Text,
 		LastUpdate:      time.Now(),
 	}
 	_, e := os.Open(dpath)
-	ext := os.IsExist(e)
+	ext := false
+	if e != nil {
+		ext = os.IsExist(e)
+	}
 	if !ext {
-		err = os.Mkdir(dpath, os.ModeDir)
+		// dpath = "../../" + dpath
+		err = os.Mkdir(dpath, os.ModePerm)
 		if err != nil {
+			log.Println("mkdir")
+			log.Println(err)
 			return
 		}
 	}
 	var b []byte
-	_, err = get.Body.Read(b)
+	b, _ = xml.Marshal(l)
+	err = os.WriteFile(path.Join(dpath, Id+".xml"), b, os.ModePerm)
 	if err != nil {
-		return
-	}
-	err = os.WriteFile(path.Join(dpath, Id+".xml"), b, 0655)
-	if err != nil {
+		log.Println("write")
+		log.Println(err)
 		return
 	}
 	if _, e := os.Open(dpath); os.IsExist(e) {
 		open, err := git.PlainOpen(dpath)
 		if err != nil {
+			log.Println("open")
+			log.Println(err)
 			return
 		}
 		worktree, err := open.Worktree()
 		if err != nil {
+			log.Println("worktree")
+			log.Println(err)
 			return
 		}
-		_, err = worktree.Commit(date, &git.CommitOptions{})
+		worktree.Add(path.Join(dpath, Id+".xml"))
+		_, err = worktree.Commit(date, &git.CommitOptions{
+			Author: &object.Signature{
+				Name:  "GitLaw",
+				Email: "",
+			},
+		})
 		if err != nil {
+			log.Println("commit")
+			log.Println(err)
 			return
 		}
 
 		if err != nil {
+			log.Println(err)
 			return
 		}
 		CreateDecree(d)
 	} else {
 		init, err := git.PlainInit(dpath, false)
 		if err != nil {
+			log.Println(err)
 			return
 		}
 		worktree, err := init.Worktree()
 		if err != nil {
+			log.Println(err)
 			return
 		}
 		_, err = worktree.Add(path.Join(dpath, Id+".xml"))
 		if err != nil {
+			log.Println(err)
 			return
 		}
 		_, err = worktree.Commit(date, &git.CommitOptions{})
 		if err != nil {
+			log.Println(err)
 			return
 		}
 
 		err = UpdateDecree(d)
 		if err != nil {
+			log.Println(err)
 			return
 		}
 	}

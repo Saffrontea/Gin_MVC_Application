@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProfileDisplay(c *gin.Context) {
+func Display(c *gin.Context) {
 	var decName []decree.Decree
 	errorMsg := ""
 	usr, loginState, err := login.GetLoginUser(c)

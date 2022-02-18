@@ -10,6 +10,6 @@ var location []byte
 
 func GetLocationList() []string {
 	var locationList []string
-	_ = json.Unmarshal(location, locationList)
+	_ = json.Unmarshal(location, &locationList)
 	return locationList
 }

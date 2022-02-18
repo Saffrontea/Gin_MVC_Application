@@ -4,10 +4,16 @@ import (
 	"Gin_MVC/controller/header"
 	"Gin_MVC/controller/login"
 	"Gin_MVC/model/location"
+	"Gin_MVC/model/user"
 	"github.com/gin-gonic/gin"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
+	"mime/multipart"
 )
 
-func EditProfileDisplay(c *gin.Context) {
+func DisplayEditProfile(c *gin.Context) {
 	errorMsg := ""
 	usr, loginState, err := login.GetLoginUser(c)
 	locList := location.GetLocationList()
@@ -45,4 +51,27 @@ func EditProfileDisplay(c *gin.Context) {
 		"errorMsg":     errorMsg,
 		"LocationList": locList,
 	})
+}
+
+
+func UpdateProfile(c *gin.Context){
+	usr, b, err := login.GetLoginUser(c)
+	if err != nil || !b {
+
+	}
+	img, err := c.FormFile("img")
+	file,err := img.Open()
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+		}
+	}(file)
+	if err != nil {
+	}
+
+	decode, _, err := image.Decode(file)
+	if err != nil {
+		//TODO:Error Handle
+	}
+	usr.Image = user.Image(user.SaveImage(decode))
 }

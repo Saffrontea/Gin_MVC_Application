@@ -4,8 +4,7 @@ import (
 	"Gin_MVC/model/database"
 	"Gin_MVC/model/decree"
 	"encoding/json"
-	"hash"
-
+	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
 )
 
@@ -38,7 +37,7 @@ type Discuss struct {
 */
 type ContentJSON []struct {
 	Title string    `json:"title"`
-	Hash  hash.Hash `json:"hash"`
+	Hash  string `json:"hash"`
 	//作成ユーザーのID
 	Create_User int    `json:"createUser"`
 	Body        string `json:"body"`
@@ -60,11 +59,31 @@ func GetDiscuss(id int) (Discuss, error) {
 	return d, err
 }
 
-// func CreateDiscuss(discuss Discuss) error{
-// 	var s string
-// 	_ = json.NewEncoder().Encode(Discuss{})
+func CreateDiscuss(discuss Discuss) error{
+	return database.DB.Create(discuss).Error
+}
 
-// 	return database.DB.Create(&Discuss{
-// 		Content: s,
-// 	}).Error
-// }
+
+func CreateDiscussJSON(content  ContentJSON) (*string,error){
+	s,err := json.Marshal(content)
+	str := string(s)
+	if err != nil {
+		return nil,err
+	}
+	return &str,nil
+}
+
+func (content *ContentJSON) UpdateContent(title string,userId int,Text string)  {
+	c := ContentJSON{
+		{
+		Title:       title,
+		Hash: uuid.New().String(),
+		Create_User: userId,
+		Body:        Text,
+		MentionTo:  nil,
+	},
+	}
+	//TODO:Mentionを作る
+	c = append(*content,c...)
+	content = &c
+}

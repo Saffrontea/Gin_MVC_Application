@@ -14,7 +14,7 @@ import (
 	"strconv"
 )
 
-func DisplayRegister(c *gin.Context) {
+func Display(c *gin.Context) {
 	session := sessions.Default(c)
 	errorMsg := ""
 	_, loginState, err := login.GetLoginUser(c)
@@ -66,5 +66,7 @@ func RegisterUser(c *gin.Context) {
 	if err != nil {
 		c.Set("err", "会員登録に失敗しました")
 		c.Redirect(http.StatusTemporaryRedirect, "/register")
+	} else {
+		c.Redirect(302,"/register/complete")
 	}
 }

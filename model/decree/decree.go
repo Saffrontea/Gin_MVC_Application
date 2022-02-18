@@ -180,10 +180,12 @@ func GetDecreeFromAPI(Id string, date string) {
 
 }
 
-func (decree Decree) GetDecree() (*law.Law, error) {
+func (decree Decree) GetLaw() (*law.Law, error) {
 	f, e := os.Open(path.Join(DecreeDir, decree.DecreeReference, decree.DecreeReference+".xml"))
 	if e != nil {
 		return nil, e
 	}
 	return law.CreateLaw(f)
 }
+
+

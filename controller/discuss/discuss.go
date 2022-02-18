@@ -69,3 +69,32 @@ func Display(c *gin.Context) {
 		"content":    content,
 	})
 }
+
+func createDiscuss(c *gin.Context) {
+	//errorMsg := ""
+	usr, _, err := login.GetLoginUser(c)
+	if err != nil {
+		//errorMsg = err.Error()
+	}
+	discussType,err  := strconv.Atoi(c.PostForm("type"))
+	content := c.PostForm("content")
+	var d = discuss.Discuss{
+		//Decree:       ,
+		Create_User: usr.Id,
+		Discuss_Type: discussType,
+		Title:       c.PostForm("title"),
+		Opened:      1,
+		//Content: ,
+	}
+	j := discuss.ContentJSON{}
+	j.UpdateContent(d.Title,d.Create_User,content)
+	contentJSON,_ := json.Marshal(j)
+	d.Content = contentJSON
+
+	err = discuss.CreateDiscuss(d)
+	if err != nil {
+		return
+	}
+
+}
+

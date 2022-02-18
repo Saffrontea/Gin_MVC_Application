@@ -55,5 +55,6 @@ func Migrator(i []interface{}) error {
 //Transaction トランザクション処理の関数を入れる
 func Transaction(f func(tx *gorm.DB) error) error {
 	//db, _ := getNewDB()
+
 	return DB.Transaction(f)
 }

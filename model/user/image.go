@@ -26,6 +26,7 @@ func (receiver Image) GetImage() string {
 	defer open.Close()
 	if err != nil {
 		log.Printf("File not found : %s", receiver)
+		if receiver == "image.png" {return ""}
 		return defaultImage()
 	}
 	return "resource/userResource/" + string(receiver)

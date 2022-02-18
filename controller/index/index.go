@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func IndexDisplayAction(c *gin.Context) {
+func Display(c *gin.Context) {
 	errorMsg := ""
 
 	usr, loginState, err := login.GetLoginUser(c)

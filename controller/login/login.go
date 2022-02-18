@@ -17,8 +17,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// DisplayLoginFrom ログインフォーム表示
-func DisplayLoginFrom(c *gin.Context) {
+// Display ログインフォーム表示
+func Display(c *gin.Context) {
 	session := sessions.Default(c)
 	e := session.Get("err")
 	if e != nil {

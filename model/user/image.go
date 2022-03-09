@@ -6,12 +6,14 @@ import (
 	"image/png"
 	"log"
 	"os"
+	"path"
 	"strings"
-	"time"
 )
 
 //Image 画像のUUID.png
 type Image string
+
+const ImageDir = "resource/userResource/"
 
 /*
 	GetImage
@@ -22,14 +24,16 @@ func (receiver Image) GetImage() string {
 	if receiver == "" {
 		return defaultImage()
 	}
-	open, err := os.Open("resource/userResource/" + string(receiver))
+	open, err := os.Open(string(receiver))
 	defer open.Close()
 	if err != nil {
 		log.Printf("File not found : %s", receiver)
-		if receiver == "image.png" {return ""}
+		if receiver == "image.png" {
+			return ""
+		}
 		return defaultImage()
 	}
-	return "resource/userResource/" + string(receiver)
+	return string(receiver)
 }
 
 /*
@@ -38,14 +42,15 @@ func (receiver Image) GetImage() string {
 */
 func defaultImage() string {
 	var s Image
-	s = "image.png"
+	s = ImageDir + "image.png"
 	return s.GetImage()
 }
 
 /*
  */
-func SaveImage(img image.Image) string {
-	var f *os.File
+func (r Image) SaveImage(img image.Image) string {
+	//var f *os.File
+	f, _ := os.Create(path.Join(ImageDir, strings.Replace(uuid.NewString(), "-", "", -1)+".png"))
 	defer func(f *os.File) {
 		err := f.Close()
 		if err != nil {
@@ -53,18 +58,9 @@ func SaveImage(img image.Image) string {
 			f.Close()
 		}
 	}(f)
-	for {
-		var err error
-		fname := strings.ReplaceAll(uuid.NewString(), "-", "")
-		f, err = os.Create(fname + ".png")
-		if err == nil {
-			break
-		}
-		time.Sleep(time.Second * 20)
+	if !strings.Contains(r.GetImage(), defaultImage()) {
+		os.Remove(r.GetImage())
 	}
-	err := png.Encode(f, img)
-	if err != nil {
-		log.Println("Cannot Create Image!! : ", f.Name())
-	}
+	png.Encode(f, img)
 	return f.Name()
 }

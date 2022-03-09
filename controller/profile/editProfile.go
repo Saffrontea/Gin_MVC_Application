@@ -3,14 +3,19 @@ package profile
 import (
 	"Gin_MVC/controller/header"
 	"Gin_MVC/controller/login"
+	"Gin_MVC/model/database"
 	"Gin_MVC/model/location"
 	"Gin_MVC/model/user"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
+	"log"
 	"mime/multipart"
+	"net/http"
+	"strconv"
 )
 
 func DisplayEditProfile(c *gin.Context) {
@@ -24,10 +29,10 @@ func DisplayEditProfile(c *gin.Context) {
 	c.HTML(200, "editProfile.html", gin.H{
 		"headerUser": header.GetHeaderUser(usr),
 		"user": struct {
-			//本名
-			Name string
 			//ユーザー名
-			UserName string
+			Name string
+			//ユーザーID
+			UserID string
 			//自己紹介
 			Profile string
 			//居住地
@@ -38,7 +43,7 @@ func DisplayEditProfile(c *gin.Context) {
 			Tel string
 		}{
 			usr.Name,
-			usr.Username,
+			usr.UserID,
 			usr.Profile,
 			usr.Location,
 			usr.Publish,
@@ -53,25 +58,55 @@ func DisplayEditProfile(c *gin.Context) {
 	})
 }
 
-
-func UpdateProfile(c *gin.Context){
+func UpdateProfile(c *gin.Context) {
 	usr, b, err := login.GetLoginUser(c)
 	if err != nil || !b {
 
 	}
 	img, err := c.FormFile("img")
-	file,err := img.Open()
-	defer func(file multipart.File) {
-		err := file.Close()
+	if err == nil {
+		file, err := img.Open()
 		if err != nil {
+			log.Println(err)
 		}
-	}(file)
-	if err != nil {
-	}
+		defer func(file multipart.File) {
+			err := file.Close()
+			if err != nil {
+			}
+		}(file)
+		if err == nil {
+			decode, _, err := image.Decode(file)
+			if err == nil {
+				//TODO:Error Handle
+				usr.Image = user.Image(usr.Image.SaveImage(decode))
+				log.Println(usr.Image)
+			} else {
+				log.Println(err)
+			}
 
-	decode, _, err := image.Decode(file)
-	if err != nil {
-		//TODO:Error Handle
+		}
+	} else {
+		log.Println(err)
 	}
-	usr.Image = user.Image(user.SaveImage(decode))
+	//TODO:Update Profile
+
+	usr.Name = c.PostForm("username")
+	session := sessions.Default(c)
+	session.Set("User", usr.UserID)
+	session.Save()
+	log.Println("aaa")
+	usr.Profile = c.PostForm("profile")
+	atoi, err := strconv.Atoi(c.PostForm("location"))
+	if err != nil {
+		log.Println("parse error?")
+		return
+	}
+	usr.Location = uint32(atoi)
+	usr.Tel = c.PostForm("tel")
+	usr.Publish = c.PostForm("publish") == "on"
+	log.Println(usr)
+	if database.DB.Save(&usr).Error != nil {
+		c.AbortWithStatus(502)
+	}
+	c.Redirect(http.StatusSeeOther, "profile")
 }

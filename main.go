@@ -14,8 +14,10 @@ import (
 
 func main() {
 	_ = database.DBConnection()
-
-	database.Migrator([]interface{}{&user.User{}, &decree.Decree{}, &notify.Notify{}, &priority.Priority{}, &discuss.Discuss{}})
+	user.WaitAuthUsers = map[string]int{}
+	user.PasswordForgetUsers = map[string]int{}
+	database.Migrator([]interface{}{&user.User{}, &decree.Decree{}, &notify.Notify{}, &priority.Priority{}, &discuss.Discuss{}, &user.Star{}})
 	r := router.GetRouter()
+	go discuss.CloseOldDiscuss()
 	r.Run(":3000")
 }

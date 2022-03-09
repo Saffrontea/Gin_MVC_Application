@@ -4,6 +4,7 @@ import (
 	"Gin_MVC/model/database"
 	"Gin_MVC/model/decree"
 	"gorm.io/gorm"
+	"log"
 )
 
 /*
@@ -13,7 +14,7 @@ import (
 type Star struct {
 	Id     int `gorm:"primaryKey"`
 	UserId int
-	Star   int
+	Star   int `gorm:""`
 }
 
 /*
@@ -47,4 +48,16 @@ func (u *User) AppendStar(decree int) {
 		return nil
 	})
 	database.DB.Save(&u)
+}
+
+func (u *User) RemoveStar(decree int) {
+	st := []int{}
+	for i := 0; i < len(u.Star); i++ {
+		if u.Star[i].Star == decree {
+			st = append(st, u.Star[i].Id)
+			u.Star = append(u.Star[:i], u.Star[i+1:]...)
+		}
+	}
+	log.Println(u.Star)
+	database.DB.Where("stars.user_id = ?", u.Id).Delete(&Star{}, st)
 }

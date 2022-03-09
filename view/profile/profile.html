@@ -2,17 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    {{template "head" .}}
+    <title>{{.username}}さんのプロフィール - GitLaw</title>
+    <style>
+        #userProfile {
+            zoom: 0.85;
+        }
+    </style>
 </head>
 <body>
 {{template "header" .}}
-<h2>{{.username}}</h2>
-<img src="{{.img}}" alt="">
-<p>{{.userprofile}}</p>
-<ul>
-{{range .stars}}
-<li><a href='{{printf "/decree/?id=%d" .Id}}'>{{.Name}}</a>をお気に入りしました</li>
-{{end}}
-</ul>
+<p>{{.err}}</p>
+
+<div class="container-fluid">
+    <div class="row my-5">
+        <div class="col-10 offset-1">
+            <h1 class="text-primary"><span class="text-limit">{{.username}}</span>さんのプロフィール</h1>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-7 offset-4">
+            <div class="border-bottom pb-2 mb-3 d-flex">
+                <div class="h3 mr-auto">
+                    プロフィール
+                </div>
+                {{if .myProfile}}
+                <div class="">
+                    <button class="btn btn-sm btn-success" onclick="location.href='editProfile'">プロフィールを編集する</button>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3 offset-1">
+            <div class="m-3">
+                <div class="d-flex justify-content-center">
+                    <img class="border rounded-circle bg-white" src="{{.img}}" alt="" width="200px" height="200px">
+                </div>
+                <h2 class="mt-5 text-center text-limit">{{.username}}</h2>
+                <p class="text-center">@{{.userid}}</p>
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="card m-3 p-3 h-100">
+                <p style="white-space: pre-wrap" id="userProfile">{{.userprofile}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-7 offset-4">
+            <div class="border-bottom pb-2 mb-3 d-flex">
+                <div class="h3 mr-auto">
+                    お気に入り
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-7 offset-4">
+            <ul class="list-group">
+                {{range .stars}}
+                <li class="list-group-item"><a href='{{printf "/decree/?decid=%d" .Id}}'>{{.Name}}</a>をお気に入りしました</li>
+                {{else}}
+                <li class="list-group-item">まだお気に入りがありません</li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+
+    {{if .user.Publish}}
+    <div class="row">
+        <div class="col-7 offset-4">
+            <div class="border-bottom pb-2 mb-3 d-flex">
+                <div class="h3 mr-auto">
+                    居住地
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-7 offset-4">
+            <ul class="pl-5">
+                {{range $i ,$v := .LocationList}}
+                {{if eq $i $.user.Location}}
+                <p>{{$v}}</p>
+                {{end}}
+                {{end}}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-7 offset-4">
+            <div class="border-bottom pb-2 mb-3 d-flex">
+                <div class="h3 mr-auto">
+                    電話番号
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-7 offset-4">
+            <p class="pl-5"><a href="tel:{{.user.Tel}}">{{.user.Tel}}</a></p>
+        </div>
+    </div>
+    {{end}}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    document.getElementById('userProfile').innerHTML =
+        marked.parse(document.getElementById('userProfile').innerHTML);
+</script>
 </body>
 </html>

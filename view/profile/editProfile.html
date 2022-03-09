@@ -2,46 +2,149 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    {{template "head".}}
+    <title>プロフィール編集 - GitLaw</title>
 </head>
 <body>
 {{template "header" .}}
 <main>
-    <form>
-<div id="profileImg">
-    <input type="image" name="image" value="{{.img}}">
-    <button>プロフィール画像をアップロードする</button>
-</div>
-<div id="userName">
-    <h2>ユーザー名</h2>
-    <input type="text" value="{{.user.UserName}}" name="username" readonly>
-    <button>編集する</button>
-</div>
-    <div id="profileText">
-        <h2>プロフィール</h2>
-        <textarea name="profile">{{.user.Profile}}</textarea>
-    </div>
-        <div id="Location">
-            <h2>居住地</h2>
-            <select name="location">
-                {{range $i ,$v := .LocationList}}
-                    {{if eq $i .user.Location}}
-                        <option value="{{$i}}" selected>{{$v}}</option>
-                    {{else}}
-                        <option value="{{$i}}" >{{$v}}</option>
-                    {{end}}
-                {{end}}
-            </select>
-            <div id="profileTel">
-                <input type="tel" value="{{.user.Tel}}" name="tel">
+    <div class="container-fluid">
+        <div class="row my-5">
+            <div class="col offset-1">
+                <h1 class="text-primary h2">プロフィール編集</h1>
             </div>
-            {{if .user.Publish}}
-                <input type="checkbox" name="publish" checked>
-            {{else}}
-                <input type="checkbox" name="publish">
-            {{end}}
         </div>
-    </form>
+        <form action="updateProfile" method="post" name="profile" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <div class="col-8 offset-2">
+                    <div id="profileImg" class="col d-flex align-items-center">
+                        <div><img class="border rounded-circle my-3 ml-1" id="preview" src="{{.img}}" width="150px" height="150px">
+                        </div>
+                        <label class="offset-2 border rounded px-2 py-1 btn btn-primary">
+                            <input type="file" name="img" accept="image/png , image/jpeg" onchange="previewImage(this)" style="display: none">画像をアップロード
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-8 offset-2">
+                <table class="table">
+                    <tr id="userName">
+                        <td>ユーザー名</td>
+                        <td>
+                            <input class="form-control" name="username" value="{{.user.Name}}">
+                        </td>
+                    </tr>
+                    <tr id="profileText">
+                        <td>プロフィール</td>
+                        <td>
+                            <textarea id="profile" class="form-control" name="profile" style="height: 300px">{{.user.Profile}}</textarea>
+                        </td>
+                    </tr>
+                    <tr id="Location">
+                        <td>居住地</td>
+                        <td>
+                            <select class="form-control" name="location">
+                                {{range $i ,$v := .LocationList}}
+                                {{if eq $i $.user.Location}}
+                                <option value="{{$i}}" selected>{{$v}}</option>
+                                {{else}}
+                                <option value="{{$i}}">{{$v}}</option>
+                                {{end}}
+                                {{end}}
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr id="profileTel">
+                        <td>電話番号</td>
+                        <td>
+                            <input class="form-control" type="tel" value="{{.user.Tel}}" name="tel" pattern="[0-9]+">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>公開設定<small>（居住地、電話番号）</small></td>
+                        <td>
+                            {{if .user.Publish}}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="publish" value="on" id="pubOpen" checked>
+                                <label class="form-check-label" for="pubOpen">
+                                    公開する
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="publish" value="" id="pubClose">
+                                <label class="form-check-label" for="pubClose">
+                                    公開しない
+                                </label>
+                            </div>
+                            {{else}}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="publish" value="on" id="pubOpen">
+                                <label class="form-check-label" for="pubOpen">
+                                    公開する
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="publish" value="" id="pubClose" checked>
+                                <label class="form-check-label" for="pubClose">
+                                    公開しない
+                                </label>
+                            </div>
+                            {{end}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" class="btn  btn-sm btn-outline-danger mx-2" data-toggle="modal" data-target="#deleteModal">
+                                アカウントを削除する
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">確認</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            本当に削除してもよろしいですか？
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <input type="checkbox" name="agree" value="on" hidden checked>
+                                                <input type="button" class="btn btn-danger" value="削除する" onclick="document.profile.action = 'deleteUser' ;document.profile.submit()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-secondary mx-2" onclick="location.href='/profile'">キャンセル</button>
+                            <input class="btn btn-sm btn-primary mx-2" type="submit" value="更新する">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
 </main>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("profile"),
+        spellChecker:false
+    });
+    function previewImage(obj) {
+        var fileReader = new FileReader();
+        fileReader.onload = (function () {
+            document.getElementById('preview').src = fileReader.result;
+        });
+        fileReader.readAsDataURL(obj.files[0]);
+    }
+</script>
 </body>
 </html>

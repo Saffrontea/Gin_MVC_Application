@@ -1,4 +1,65 @@
-h1 {
-    text-align: center;
-    margin: 100px;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap");
+html {
+  scroll-behavior: smooth;
 }
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #fafafd !important;
+}
+
+.bg-default {
+  background-color: #fafafd !important;
+}
+
+.login__title {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+}
+.login__table td {
+  font-size: 14px;
+  padding: 5px;
+}
+.login__footer {
+  font-size: 14px;
+}
+
+.register__table td {
+  font-size: 12px;
+  padding: 5px;
+}
+.register__table td small {
+  padding-left: 5px;
+  font-size: 8px;
+  font-weight: 100;
+}
+.register__table input {
+  font-size: 12px;
+}
+.register__kinds div {
+  height: 40px;
+  margin: 10px;
+}
+.register__kinds div button {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  width: 100%;
+}
+.register__kinds--google button {
+  background-color: white !important;
+}
+.register__kinds--facebook button {
+  background-color: #3b5998 !important;
+}
+.register__kinds--twitter button {
+  background-color: #00acee !important;
+}
+.register__kinds--email button {
+  background-color: white !important;
+}
+
+.card {
+  border: 2px solid rgba(0, 0, 0, 0.125);
+}
+
+/*# sourceMappingURL=index.css.map */

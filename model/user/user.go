@@ -21,10 +21,12 @@ type User struct {
 	Id int `gorm:"primaryKey;autoIncrement"`
 	//表示名
 	Name string
-	//フリガナ TODO:いる？
-	Ruby string
+	//フリガナ
+	//Ruby string
 	//ユーザーのID
-	Username string `gorm:"unique"`
+	UserID string `gorm:"unique;not null"`
+	Mail   string `gorm:"unique;not null"`
+	Authed bool
 	//パスワードは作成時にハッシュ化
 	Password string
 	Birth    *time.Time
@@ -44,6 +46,9 @@ type User struct {
 	Discuss []discuss.Discuss `gorm:"foreignKey:Create_User"`
 }
 
+var WaitAuthUsers map[string]int
+var PasswordForgetUsers map[string]int
+
 /*
 	GetUser
 	ユーザー情報をDBから取得
@@ -51,15 +56,15 @@ type User struct {
 func GetUser(name string) (User, error) {
 	//_ := database.DBConnection()
 	user := User{}
-	err := database.DB.Find(&user, "Username", name).Error
-	if err == nil {
-		//DBから関連テーブルを取得
-		database.DB.Preload(clause.Associations).Find(&user.Priority)
-		database.DB.Preload(clause.Associations).Find(&user.Notify)
-		database.DB.Preload(clause.Associations).Find(&user.Discuss)
-		database.DB.Preload(clause.Associations).Find(&user.Star)
-
-	}
+	err := database.DB.Preload(clause.Associations).Where("users.authed = ?", true).Find(&user, "user_id", name).Error
+	//if err == nil {
+	//	//DBから関連テーブルを取得
+	//	database.DB.Preload(clause.Associations).Find(&user.Priority)
+	//	database.DB.Preload(clause.Associations).Find(&user.Notify)
+	//	database.DB.Preload(clause.Associations).Find(&user.Discuss)
+	//	database.DB.Preload(clause.Associations).Find(&user.Star)
+	//
+	//}
 	return user, err
 }
 
@@ -77,7 +82,7 @@ func CreateUser(user *User, tx *gorm.DB) *gorm.DB {
 
 func GetUserByID(uid int) (User, error) {
 	var user User
-	err := database.DB.First(&user, uid, "id = ?").Error
+	err := database.DB.Preload(clause.Associations).Where("users.authed = ?", true).First(&user, uid, "id = ?").Error
 	return user, err
 }
 
@@ -87,6 +92,26 @@ func (user User) GetUserName() string {
 	if user.Publish {
 		return user.Name
 	} else {
-		return user.Username
+		return user.Name
 	}
+}
+func GetDisabledUser(uid int) (User, error) {
+	var user User
+	err := database.DB.Preload(clause.Associations).Where("users.authed = ? ", false).Find(&user, "id = ?", uid).Error
+	return user, err
+}
+
+func (user *User) ChangePassword() error {
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user.Password = string(password)
+	return nil
+}
+
+func GetUserFromEmail(mail string) (User, error) {
+	var user User
+	err := database.DB.Preload(clause.Associations).Find(&user, "mail", mail).Error
+	return user, err
 }

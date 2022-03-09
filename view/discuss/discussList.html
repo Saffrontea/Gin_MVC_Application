@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    {{template "head"}}
+    <title>議論一覧 - GitLaw</title>
+</head>
+<body class="bg-white">
+{{template "header" .}}
+
+<div class="container-fluid">
+    <div class="row py-5 border-bottom bg-default mb-5">
+        <div class="col-10 offset-1">
+            <h1 class="mb-3 text-muted"><a><small>{{.LawNum}}</small></a></h1>
+            <h2 class="text-primary mb-3 h4">{{.title}}</h2>
+        </div>
+    </div>
+
+    <div class="row p-3">
+        <div class="col-10 offset-1">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-success" onclick="location.href='decree?decid={{.id}}#discuss'">新規議論作成</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-5">
+        <div class="col-10 offset-1 card rounded-lg p-0">
+            <div class="container-fluid p-0">
+
+                <div class="py-3 bg-default d-flex">
+                    <div class="col-2 border-right">
+                        🔵️ 議論中
+                    </div>
+                    <div class="col-2 border-right mr-auto text-muted">
+                        ✅ 帰着済
+                    </div>
+                    <div class="px-4 border-left">
+                        ソート
+                    </div>
+                    <div class="px-4 border-left">
+                        <!--                        新着順 ▼-->
+                        <select onchange="location.href='discussList?decid={{.id}}'+this.options[this.selectedIndex].value">
+                            <option value="">新着順</option>
+
+                            {{if eq .sort "rev"}}
+                            <option value="&sort=rev" selected>投稿順</option>
+                            {{else}}
+                            <option value="&sort=rev">投稿順</option>
+                            {{end}}
+
+                            {{if eq .sort "comment"}}
+                            <option value="&sort=comment" selected>コメント数が多い順</option>
+                            {{else}}
+                            <option value="&sort=comment">コメント数が多い順</option>
+                            {{end}}
+
+                            {{if eq .sort "commentRev"}}
+                            <option value="&sort=commentRev" selected>コメント数が少ない順</option>
+                            {{else}}
+                            <option value="&sort=commentRev">コメント数が少ない順</option>
+                            {{end}}
+
+                        </select>
+                    </div>
+                </div>
+
+                <table class="table table-hover mb-0">
+                    {{range .list}}
+                    <tr data-href="discuss?id={{.Id}}">
+                        <td class="p-3 col-7">
+                            {{if .Opened}}
+                            🔵
+                            {{else}}
+                            ✅
+                            {{end}}
+                            {{.Title}}
+                        </td>
+                        <td class="col-3 text-nowrap text-right text-muted px-3">
+                            作成者：{{.CreateUser.GetUserName}}
+                        </td>
+                        <td class="col-3 text-nowrap text-right text-muted pr-5">💬 {{.CommentQuantity}}</td>
+                    </tr>
+                    {{end}}
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

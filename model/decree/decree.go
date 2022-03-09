@@ -8,6 +8,7 @@ import (
 	"Gin_MVC/model/database"
 	"Gin_MVC/model/law"
 	"encoding/xml"
+	"github.com/go-git/go-git/v5/plumbing"
 	"log"
 	"net/http"
 	"os"
@@ -49,7 +50,8 @@ func CreateDecree(decree Decree) error {
 }
 
 func UpdateDecree(decree Decree) error {
-	return database.DB.Model(&Decree{}).Where("decree_reference = ?", decree.DecreeReference).Update("last_update", decree.LastUpdate).Error
+	return database.DB.Model(&Decree{}).Where(""+
+		"decree_reference = ?", decree.DecreeReference).Update("last_update", decree.LastUpdate).Error
 }
 func GetTodoyUpdate() error {
 	get, err := http.Get("https://elaws.e-gov.go.jp/api/1/updatelawlists/" + time.Now().Format("20060102"))
@@ -180,6 +182,48 @@ func GetDecreeFromAPI(Id string, date string) {
 
 }
 
+func (decree Decree) GetRevisions() (*[]plumbing.Hash, error) {
+	open, err := git.PlainOpen(path.Join(DecreeDir, decree.DecreeReference))
+	if err != nil {
+		return nil, err
+	}
+	objects, err := open.CommitObjects()
+	if err != nil {
+		return nil, err
+	}
+	nn := make([]plumbing.Hash, 0)
+	objects.ForEach(func(commit *object.Commit) error {
+		nn = append(nn, commit.Hash)
+		return nil
+	})
+	return &nn, nil
+}
+
+func (decree Decree) GetOldLaw(h plumbing.Hash) (*law.Law, error) {
+	open, err := git.PlainOpen(path.Join(DecreeDir, decree.DecreeReference))
+	if err != nil {
+		return nil, err
+	}
+	commitObject, err := open.CommitObject(h)
+	if err != nil {
+		return nil, err
+	}
+	file, err := commitObject.File(decree.DecreeReference + ".xml")
+	if err != nil {
+		return nil, err
+	}
+
+	reader, err := file.Reader()
+	if err != nil {
+		return nil, err
+	}
+	l, err := law.CreateLawFromReader(reader)
+	if err != nil {
+		return nil, err
+	}
+	return l, nil
+}
+
 func (decree Decree) GetLaw() (*law.Law, error) {
 	f, e := os.Open(path.Join(DecreeDir, decree.DecreeReference, decree.DecreeReference+".xml"))
 	if e != nil {
@@ -187,5 +231,3 @@ func (decree Decree) GetLaw() (*law.Law, error) {
 	}
 	return law.CreateLaw(f)
 }
-
-

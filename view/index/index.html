@@ -1,43 +1,156 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/resource/css/index.css">
-    <script src="/resource/js/index.js"></script>
-    <title>{{ .str }}</title>
+    {{template "head" .}}
+    <title>GitLaw</title>
 </head>
 <body>
 {{template "header" .}}
-<h1>{{ .str }}</h1>
-<p>{{.username}}</p>
-<p>{{.userprofile}}</p>
-{{if ne .errorMsg  ""}}
-{{template "error" .}}
-{{end}}
-<p id="notify"></p>
+{{if .loginState}}
 <script>
-    let c = 0
-    let fn = ()=> {
-        if ({{.loginState}})
-        {
-            fetch("/notify").then(
-                (res) => {
-                    if (!res.ok) {
-                        return "[]"
+    let c = 0;
+    let fn = () => {
+        fetch("/notify").then(
+            (res) => {
+                if (!res.ok) {
+                    return "[]"
+                }
+                return res.json()
+            }
+        ).then((j) => {
+            nn = JSON.parse(j)
+            if (c < nn.length) {
+               let none =  document.getElementById("notifynone");
+               if (none !== null){
+                   none.remove();
+               }
+                for (let i = c; i < nn.length; i++) {
+                    notify = document.getElementById("notify")
+                    while (notify.childElementCount > 4) {
+                        notify.lastChild.remove();
                     }
-                    return res.json()
+                    tr = document.createElement("tr")
+                    date = document.createElement("td")
+                    com = document.createElement("td")
+                    date.classList.add("w-25")
+                    date.innerText = nn[i].time
+                    com.classList.add("m-3")
+                    com.innerText = nn[i].comment
+                    com.onclick = () => {
+                        location.href = 'discuss?id=' + nn[i].discussID
+                    }
+                    tr.appendChild(date)
+                    tr.appendChild(com)
+                    notify.insertBefore(tr, notify.firstChild)
                 }
-            ).then((j) => {
-                nn = JSON.parse(j)
-                if (c < nn.length) {
-                    document.getElementById("notify").innerText = nn.length + "件の通知があります"
-                    c = nn.length
-                }
-            })
-        }
+                c = nn.length;
+            }
+        })
     };
-    fn();
-    setInterval(fn,5000)
+    window.addEventListener('DOMContentLoaded', (event) => {
+        fn();
+        setInterval(fn, 5000);
+    });
+
 </script>
+{{end}}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-2 col-10 offset-1 mt-4">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="border-top-0" colspan="3">
+                        <a href="/news">Topic・News</a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-href="/news?q=2">
+                    <td>2022.01.26</td>
+                    <td>
+                        <div class="table-danger text-center w-75">お詫び</div>
+                    </td>
+                    <td class="m-3"><span>サイト一時停止のお詫び</span></td>
+                </tr>
+                <tr data-href="/news?q=1">
+                    <td>2022.01.23</td>
+                    <td>
+                        <div class="table-primary text-center w-75">お知らせ</div>
+                    </td>
+                    <td><span>運用開始しました</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{if .loginState}}
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2 col-10 offset-1 mt-4">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="border-top-0" colspan="3">
+                        <a href="notifyList">新規通知</a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="notify">
+                    <tr data-href="" id="notifynone">
+                        <td class="w-25"></td>
+                        <td class="m-3"><span>通知はありません。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{end}}
+
+    <div class="row">
+        <div class="col-10 offset-1">
+            <p class="h4 border-bottom p-3">おすすめの議論</p>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-10 offset-1 mb-3">
+            <div class="row">
+                {{range .TopDiscusses}}
+                <div class="col-xl-3 col-6">
+                    <div class="card p-3 my-3 mx-xl-1 mx-4">
+                        {{template "discussCard" .}}
+                        <p class="h5 text-center mb-4">{{.Title}}</p>
+                        <small class="pb-3">{{.Decree.Name}}</small>
+                        <small class="text-right"><a href="/discuss?id={{.Id}}">もっと見る...</a></small>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 offset-1">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-end">
+                <p class="h4 ">新規の法令</p>
+                <div class="d-flex justify-content-end">
+                    <a href="decreeList">法令一覧</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-10 offset-1 mb-3">
+            <div class="row">
+                {{range .TopDecrees}}
+                <div class="col-xl-3 col-6">
+                    <div class="card p-3 my-3 mx-xl-1 mx-4">
+                        <p class="text-center mb-4" style="">{{.Name}}</p>
+                        <small class="text-right"><a href="/decree?decid={{.Id}}">もっと見る...</a></small>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

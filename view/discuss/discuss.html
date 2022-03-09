@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    {{template "head" .}}
+    <title>{{.discuss}} - GitLaw</title>
+
+    <style>
+        .textBody h1{
+            font-size:1.5rem;
+        }
+        .textBody img{
+            max-height: 30vh;
+            max-width: 30vw;
+        }
+        .textBody {
+            max-width: 80vw;
+            max-height: 30vw;
+        }
+    </style>
+
+</head>
+<body>
+{{template "header" .}}
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-10 offset-1">
+                <h1 class="text-primary h2"><a href="decree?decid={{.decid}}">{{.decree}}</a></h1>
+            </div>
+        </div>
+
+    <div class="row mt-3">
+        <div class="col offset-1">
+            <h2>{{.discuss}}</h2>
+            {{if eq .opened 0}}
+                <p class="text-danger">クローズ済み</p>
+            {{else if eq .opened 1}}
+                <p >オープン</p>
+            {{else if eq .opened -1}}
+                <p class="text-info">アーカイブ</p>
+            {{end}}
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-10 offset-1 card p-3">
+            {{with .content}}
+            {{range .}}
+            <div class="row my-3">
+                <div class="col-1 pt-3 px-0 d-flex justify-content-end">
+                    {{if ne .IsMine true}}
+                    {{if ne .CreateUser.Id -1}}
+                    <img class="border rounded-circle" src="{{.CreateUser.Image.GetImage}}" width="30px" height="30px" onclick="location.href='userprofile?userid={{.CreateUser.Id}}'">
+                    {{else}}
+                    <img class="border rounded-circle" src="{{.CreateUser.Image.GetImage}}" width="30px" height="30px" >
+                    {{end}}
+                    {{end}}
+                </div>
+                <div class="col-10">
+                    <div class="p-2 card">
+                        <div class="w-100">
+                            {{if .IsMine}}
+                            <p class="p-2 text-right border-bottom offset-10 text-limit" style="border-bottom-left-radius: 0.25rem;">{{.CreateUser.GetUserName}}</p>
+                            {{else}}
+                            <p class="p-2 border-bottom col-2 text-limit" style="border-bottom-right-radius: 0.25rem">{{.CreateUser.GetUserName}}</p>
+                            {{end}}
+                        </div>
+                        <div class="">
+                            <div class="ml-3 py-2 px-3 textBody" style="white-space: pre-wrap">{{ .Body}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 pt-3 px-0">
+                    {{if .IsMine}}
+                    <img class="border rounded-circle" src="{{.CreateUser.Image.GetImage}}" width="30px" height="30px">
+                    {{end}}
+                </div>
+            </div>
+
+            {{end}}
+            {{end}}
+        </div>
+    </div>
+
+    <form action="addDiscuss?id={{.id}}" method="POST">
+        <div class="row mt-3 mb-5">
+            <div class="col-7 offset-2 p-4 border-bottom">
+                <label class="w-100 m-0">
+                    {{if .loginState}}
+                    <p class=""><span class="text-limit">{{ .headerUser.Name }}</span>としてコメントする</p>
+                    {{else}}
+                    <p><a href="login">ログイン</a>してコメントする</p>
+                    {{end}}
+                    <div>
+                        {{if eq .opened 1}}
+                        <textarea id="content" class="form-control content" type="text" name="content" style="height: 100px;"
+                                  ></textarea>
+                        {{else}}
+                        <textarea id="content" class="form-control content" type="text" name="content" style="height: 100px;"
+                                  disabled></textarea>
+                        {{end}}
+                    </div>
+                </label>
+                <br>
+            </div>
+            <div class="col-1 py-4 d-flex align-items-end border-bottom">
+                <div class="mt-2 w-100">
+                    {{if eq .opened 1}}
+                    <input class="btn btn-sm btn-primary mb-2 w-100" type="submit" value="送信">
+                    {{else}}
+                    <input class="btn btn-sm btn-secondary disabled mb-2 w-100" type="submit" value="帰着済" disabled>
+                    {{end}}
+                </div>
+            </div>
+
+        </div>
+    </form>
+        {{if .IsMine}}
+        {{if eq .opened 1}}
+        <div class=" py-4 d-flex align-items-end border-bottom">
+            <div class="mt-2 w-100">
+                <button type="button" class="btn  btn-sm btn-outline-danger mx-2" data-toggle="modal" data-target="#closeModal">
+                    議論をクローズする
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="closeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">確認</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                議論をクローズしてもよろしいですか？
+                            </div>
+                            <div class="modal-footer">
+                                <form action="closeDiscuss" method="post" id="closeDiscuss">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+<!--                                <input type="checkbox" name="agree" value="on" hidden checked>-->
+                                <input name="discussid" value="{{.id}}" hidden>
+                                <input type="submit" class="btn btn-danger btn" value="確定">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+        {{end}}
+        {{end}}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+        for (const arrayElement of document.querySelectorAll('.textBody')) {
+        arrayElement.innerHTML =  marked.parse(arrayElement.innerHTML);
+    }
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    {{if eq .opened 1}}
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("content"),
+        spellChecker: false,
+    });
+    {{end}}
+</script>
+<script>
+    $('[data-toggle="tooltip"]').tooltip();
+</script>
+</body>
+</html>

@@ -11,27 +11,29 @@ type RequestXML struct {
 		Message string `xml:"Message"`
 	} `xml:"Result"`
 	ApplData struct {
-		Text            string `xml:",chardata"`
-		Date            string `xml:"Date"`
-		LawNameListInfo []struct {
-			Text                  string `xml:",chardata"`
-			LawTypeName           string `xml:"LawTypeName"`
-			LawNo                 string `xml:"LawNo"`
-			LawName               string `xml:"LawName"`
-			LawNameKana           string `xml:"LawNameKana"`
-			OldLawName            string `xml:"OldLawName"`
-			PromulgationDate      string `xml:"PromulgationDate"`
-			AmendName             string `xml:"AmendName"`
-			AmendNo               string `xml:"AmendNo"`
-			AmendPromulgationDate string `xml:"AmendPromulgationDate"`
-			EnforcementDate       string `xml:"EnforcementDate"`
-			EnforcementComment    string `xml:"EnforcementComment"`
-			LawId                 string `xml:"LawId"`
-			LawUrl                string `xml:"LawUrl"`
-			EnforcementFlg        string `xml:"EnforcementFlg"`
-			AuthFlg               string `xml:"AuthFlg"`
-		} `xml:"LawNameListInfo"`
+		Text            string          `xml:",chardata"`
+		Date            string          `xml:"Date"`
+		LawNameListInfo LawNameListInfo `xml:"LawNameListInfo"`
 	} `xml:"ApplData"`
+}
+
+type LawNameListInfo []struct {
+	Text                  string `xml:",chardata"`
+	LawTypeName           string `xml:"LawTypeName"`
+	LawNo                 string `xml:"LawNo"`
+	LawName               string `xml:"LawName"`
+	LawNameKana           string `xml:"LawNameKana"`
+	OldLawName            string `xml:"OldLawName"`
+	PromulgationDate      string `xml:"PromulgationDate"`
+	AmendName             string `xml:"AmendName"`
+	AmendNo               string `xml:"AmendNo"`
+	AmendPromulgationDate string `xml:"AmendPromulgationDate"`
+	EnforcementDate       string `xml:"EnforcementDate"`
+	EnforcementComment    string `xml:"EnforcementComment"`
+	LawId                 string `xml:"LawId"`
+	LawUrl                string `xml:"LawUrl"`
+	EnforcementFlg        string `xml:"EnforcementFlg"`
+	AuthFlg               string `xml:"AuthFlg"`
 }
 
 type RequestRespXML struct {

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{template "head" .}}
+    <title>法令一覧 - GitLaw</title>
+</head>
+<body>
+{{template "header" .}}
+
+<div class="panel panel-primary  container-fluid" >
+    <div class="panel-heading row mt-4">
+        <h3 class="panel-title">法令一覧</h3>
+        <form action="search#decree">
+            <input type="text" name="q" id="search">
+            <input type="submit" value="検索">
+        </form>
+
+    </div>
+    <div class="row d-flex justify-content-center w-75 mx-auto">
+        <ul class="list-group">
+            {{range .decreeList}}
+            <li class="list-group-item list-group-item-action">
+                <a href="decree?decid={{.Id}}">
+                    {{.Name}}
+                </a>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+
+</div>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+<script type="text/javascript" src="resource/js/paginathing.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        $('.list-group').paginathing({
+            perPage: 20,
+            containerClass: 'panel-footer',
+            prevNext: false,
+            firstLast: false,
+            limitPagination: 20,
+            liClass:"page-link",
+        });
+    });
+
+</script>
+</body>
+</html>

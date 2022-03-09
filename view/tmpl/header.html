@@ -1,22 +1,65 @@
 {{define "header"}}
 <header>
     <div>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <a class="d-flex" href="/">
+                <div class="m-1">
+                    <img src="/resource/img/icon.png"
+                         width="35px" height="35px"/>
+                </div>
+                <div class="mx-3 d-flex align-items-center">
+                    <span class="navbar-brand">Git&nbsp;Law</span>
+                </div>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <div class="input-group-sm mx-3">
+                    <form action="/search" method="get">
+                        <input
+                                class="form-control bg-dark border border-secondary text-white px-3"
+                                type="text"
+                                name="q"
+                                placeholder="検索"
+                        />
+                    </form>
 
+                </div>
+                {{if .loginState}}
+                <div class="mx-2 dropdown dropdown-toggle">
+                    <img
+                            class="border bg-light rounded-circle"
+                            src="{{.headerUser.Image}}"
+                            alt="userimage"
+                            width="35px"
+                            height="35px"
+                            type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item text-right" href="/profile">プロフィール</a>
+                        <a class="dropdown-item text-right" href="/profile#stars">お気に入り</a>
+                        <a class="dropdown-item text-right" href="/notifyList">通知一覧</a>
+                        <a class="dropdown-item text-right" href="/logout">ログアウト</a>
+                    </div>
+                </div>
+                {{else}}
+                <div class="mx-2">
+                    <button
+                            class="btn btn-sm btn-outline-light px-3"
+                            onclick="location.href='/register'"
+                    >
+                        会員登録
+                    </button>
+                </div>
+                <div class="mx-2">
+                    <button
+                            class="btn btn-sm btn-outline-light px-3"
+                            onclick="location.href='/login'"
+                    >
+                        ログイン
+                    </button>
+                </div>
+                {{end}}
+            </div>
+        </nav>
     </div>
-    <div>
-        <h1><a href="/">GitLaw</a></h1>
-    </div>
-    {{if .loginState}}
-        <div>
-            <img src="{{.headerUser.Image}}" alt="userimage">
-        </div>
-    {{else}}
-        <div>
-            <button onclick="location.href='/register'">会員登録</button>
-        </div>
-        <div>
-            <button onclick="location.href='/login'">ログイン</button>
-        </div>
-    {{end}}
 </header>
 {{end}}

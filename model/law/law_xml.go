@@ -2,6 +2,7 @@ package law
 
 import (
 	"encoding/xml"
+	"io"
 	"os"
 )
 
@@ -14,9 +15,19 @@ func CreateLaw(file *os.File) (*Law, error) {
 	return &l, nil
 }
 
+func CreateLawFromReader(r io.Reader) (*Law, error) {
+	var l Law
+	err := xml.NewDecoder(r).Decode(&l)
+	if err != nil {
+		return nil, err
+	}
+	return &l, nil
+}
+
 // Law ...
 type Law struct {
 	EraAttr             string  `xml:"Era,attr"`
+	AmendmentNum        string  `xml:"AmendmentNum,attr,omitempty"`
 	YearAttr            string  `xml:"Year,attr"`
 	NumAttr             string  `xml:"Num,attr"`
 	PromulgateMonthAttr string  `xml:"PromulgateMonth,attr,omitempty"`
@@ -37,7 +48,7 @@ type LawBody struct {
 	EnactStatement []*EnactStatement `xml:"EnactStatement"`
 	Preamble       *Preamble         `xml:"Preamble"`
 	MainProvision  *MainProvision    `xml:"MainProvision"`
-	SupplProvision []string          `xml:"SupplProvision"`
+	SupplProvision []SupplProvision  `xml:"SupplProvision"`
 	AppdxTable     []*AppdxTable     `xml:"AppdxTable"`
 	AppdxNote      []*AppdxNote      `xml:"AppdxNote"`
 	AppdxStyle     []*AppdxStyle     `xml:"AppdxStyle"`
@@ -64,7 +75,7 @@ type EnactStatement struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ArticleRange ...
@@ -73,7 +84,7 @@ type ArticleRange struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Preamble ...
@@ -107,7 +118,7 @@ type PartTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Chapter ...
@@ -126,7 +137,7 @@ type ChapterTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Section ...
@@ -146,7 +157,7 @@ type SectionTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subsection ...
@@ -165,7 +176,7 @@ type SubsectionTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Division ...
@@ -183,7 +194,7 @@ type DivisionTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Article ...
@@ -203,7 +214,7 @@ type ArticleTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ArticleCaption ...
@@ -250,7 +261,7 @@ type ParagraphNum struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ParagraphSentence ...
@@ -264,7 +275,7 @@ type SupplNote struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // AmendProvision ...
@@ -343,7 +354,7 @@ type ClassTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ClassSentence ...
@@ -373,7 +384,7 @@ type ItemTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ItemSentence ...
@@ -403,7 +414,7 @@ type Subitem1Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem1Sentence ...
@@ -433,7 +444,7 @@ type Subitem2Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem2Sentence ...
@@ -463,7 +474,7 @@ type Subitem3Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem3Sentence ...
@@ -493,7 +504,7 @@ type Subitem4Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem4Sentence ...
@@ -523,7 +534,7 @@ type Subitem5Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem5Sentence ...
@@ -553,7 +564,7 @@ type Subitem6Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem6Sentence ...
@@ -583,7 +594,7 @@ type Subitem7Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem7Sentence ...
@@ -613,7 +624,7 @@ type Subitem8Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem8Sentence ...
@@ -643,7 +654,7 @@ type Subitem9Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem9Sentence ...
@@ -672,7 +683,7 @@ type Subitem10Title struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Subitem10Sentence ...
@@ -724,7 +735,7 @@ type SupplProvisionLabel struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // SupplProvisionAppdxTable ...
@@ -858,7 +869,7 @@ type ArithFormulaNum struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // ArithFormula ...
@@ -924,7 +935,7 @@ type TableHeaderColumn struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // TableColumn ...
@@ -974,7 +985,7 @@ type FigStructTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Fig ...
@@ -995,7 +1006,7 @@ type NoteStructTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Note ...
@@ -1014,7 +1025,7 @@ type StyleStructTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Style ...
@@ -1033,7 +1044,7 @@ type FormatStructTitle struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Format ...
@@ -1045,7 +1056,7 @@ type RelatedArticleNum struct {
 	Ruby []*Ruby  `xml:"Ruby"`
 	Sup  []string `xml:"Sup"`
 	Sub  []string `xml:"Sub"`
-	Text string   `xml:",innerxml"`
+	Text string   `xml:",chardata"`
 }
 
 // Remarks ...

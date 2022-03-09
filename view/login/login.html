@@ -1,17 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+    {{template "head"}}
+    <title>ログイン - GitLaw</title>
 </head>
-<body>
-<p>{{.err}}</p>
-<form method="post" action="/doAuth">
-  <ul>
-    <li>ユーザー名:<input name="username"></li>
-    <li>パスワード:<input name="password" type="password"></li>
-    <li><input type="submit" name="submit"></li>
-  </ul>
-</form>
+<body class="bg-white">
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-md-4 col-6 offset-md-4 offset-3 offset">
+            <div class="login">
+                <div class="row login__img d-flex justify-content-center my-4">
+                    <img
+                            src="/icon.png"
+                            style="filter: invert()"
+                            width="50px"
+                            onclick="location.href='/'"
+                    />
+                </div>
+
+                <div class="row login__title mb-4">
+                    <p class="w-100 text-center h5">Sign in to GitLaw</p>
+                </div>
+                {{if .err}}
+                <div class="row mb-2 alert alert-danger">
+                    {{.err}}
+                </div>
+                {{end}}
+                <div class="row login__table card p-4 bg-default">
+                    <form method="post" action="/doAuth">
+                        <table class="table table-borderless m-0">
+                            <tr>
+                                <td colspan="2">ユーザーID</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input name="username" class="form-control"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>パスワード</td>
+                                <td class="text-right">
+                                    <a href="/login/passwordForget"><small>パスワードをお忘れの場合</small></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input
+                                            name="password"
+                                            class="form-control"
+                                            type="password"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="d-flex justify-content-center">
+                                        <input
+                                                name="submit"
+                                                class="btn btn-success mt-3 w-25"
+                                                type="submit"
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="row login__footer">
+                    <a href="/register" class="p-3 w-100 text-right"
+                    ><small>アカウント新規作成はこちら</small></a
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

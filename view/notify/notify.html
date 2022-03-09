@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    {{template "head" .}}
+    <title>通知一覧 - GitLaw</title>
+</head>
+<body>
+{{template "header" .}}
+<main>
+    {{if .loginState}}
+    <script>
+        let fn = () => {
+            fetch("/notify").then(
+                (res) => {
+                    if (!res.ok) {
+                        return "[]"
+                    }
+                    return res.json()
+                }
+            ).then((j) => {
+                let c = 0
+                nn = JSON.parse(j)
+                if (c < nn.length) {
+                    let none = document.getElementById("notifynone");
+                    if (typeof none != "undefined") {
+                        none.remove();
+                    }
+                    for (let i = c; i < nn.length; i++) {
+                        notify = document.getElementById("notify")
+                        if (notify.childElementCount >= 4) {
+                            notify.lastChild.remove()
+                        }
+                        tr = document.createElement("tr")
+                        date = document.createElement("td")
+                        com = document.createElement("td")
+                        date.classList.add("w-25")
+                        date.innerText = nn[i].time
+                        com.classList.add("m-3")
+                        com.innerText = nn[i].comment
+                        com.onclick = () => {
+                            location.href = 'discuss?id=' + nn[i].discussID
+                        }
+                        tr.appendChild(date)
+                        tr.appendChild(com)
+                        notify.insertBefore(tr, notify.firstChild)
+                    }
+                    c = nn.length
+                }
+            })
+        };
+        window.addEventListener('DOMContentLoaded', (event) => {
+            fn();
+            setInterval(fn, 5000);
+        });
+    </script>
+    {{end}}
+    {{if .loginState}}
+    <div class="container-fluid">
+        <h1 class="h2">通知一覧</h1>
+        <div class="row mb-5">
+        <div class="col-md-8 offset-md-2 col-10 offset-1 mt-4">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="border-top-0" colspan="3">
+                        <a href="">新規通知</a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="notify">
+                <tr data-href="" id="notifynone">
+                    <td class="w-25"></td>
+                    <td class="m-3"><span>通知はありません。</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    {{end}}
+</main>
+</body>
+</html>

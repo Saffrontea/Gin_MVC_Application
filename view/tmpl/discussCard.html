@@ -1,0 +1,9 @@
+{{define "discussCard"}}
+        {{if eq .DiscussType 0}}
+        <p class="text-right"><small class="bg-info text-white px-2 py-1 rounded">○疑問</small></p>
+        {{else if eq .DiscussType 1}}
+        <p class="text-right"><small class="bg-warning text-white px-2 py-1 rounded">○議論</small></p>
+        {{else if eq .DiscussType 2}}
+        <p class="text-right"><small class="bg-danger text-white px-2 py-1 rounded">○相談</small></p>
+        {{end}}
+{{end}}

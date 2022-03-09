@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    {{template "head" .}}
+    <title>{{.query}}の検索結果 - GitLaw</title>
+    <style>
+
+        .userProfile > *{
+            font-size: inherit;
+        }
+    </style>
+</head>
+<body class="bg-white">
+{{template "header" .}}
+<main>
+    <div class="container-fluid">
+
+        <div class="container-fluid">
+            <div class="row mt-5">
+                <div class="col offset-1">
+                    <h1 class="text-primary">「{{.query}}」の検索結果</h1>
+                </div>
+            </div>
+            <div class="row mt-5" id="user">
+                <div class="col-10 offset-1 d-flex justify-content-between align-items-center">
+                    <p class="h3">ユーザー検索</p>
+                    <div>
+                        {{if gt .userCount 500}}
+                        <small class="border bg-light px-2 py-1 rounded text-center">500+</small>
+                        {{else}}
+                        <small class="border bg-light px-2 rounded text-center">{{.userCount}}</small>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-10 offset-1">
+                    <div class="container-fluid">
+                        {{if .SearchUserRes}}
+                        <div class="row flex-row flex-nowrap overflow-auto m-3 p-3 card bg-light">
+                            {{range .SearchUserRes}}
+                            <div class="col-3 p-2">
+                                <div class="card p-2">
+                                    <div class="d-flex justify-content-center">
+                                        <img class="m-3 border rounded-circle" src="{{.Image}}" alt="" width="70px"
+                                             height="70px">
+                                    </div>
+                                    <div class="d-flex justify-content-center flex-column">
+                                        <a class="text-center text-limit" href="userprofile?userid={{.Id}}">{{.Name}}</a>
+                                        <small class="text-center">{{.UserID}}</small>
+                                        <small class="userProfile mt-3 overflow-hidden" style="height: 60px;">{{.Profile}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {{end}}
+                        </div>
+                        {{else}}
+                        <p class="text-center w-100 my-3">検索結果はありません。</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5" id="discuss">
+                <div class="col-10 offset-1 d-flex justify-content-between align-items-center">
+                    <p class="h3">議論検索</p>
+                    <div>
+                        {{if gt .DiscussCount 500}}
+                        <small class="border bg-light px-2 py-1 rounded text-center">500+</small>
+                        {{else}}
+                        <small class="border bg-light px-2 rounded text-center">{{.DiscussCount}}</small>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-10 offset-1">
+                    <div class="row flex-row flex-nowrap overflow-auto m-3 p-3 card bg-light">
+                            {{if .SearchDiscussRes}}
+                            {{range .SearchDiscussRes}}
+                        <div class="col-3">
+                            <div class="card p-3">
+                                {{template "discussCard" .}}
+                                <!--                                <p class="text-right"><small class="bg-info text-white px-2 py-1 rounded">○疑問</small></p>-->
+                                <p class="h5 text-center mb-4">{{.Title}}</p>
+                                <small class="pb-3">{{.Decree.Name}}</small>
+                                <small class="text-right"><a href="/discuss?id=1">もっと見る...</a></small>
+                            </div>
+                        </div>
+                            {{end}}
+                            {{else}}
+                            <p class="text-center w-100 my-3">検索結果はありません。</p>
+                            {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5" id="decree">
+            <div class="col-10 offset-1 d-flex justify-content-between align-items-center">
+                <p class="h3">法令検索</p>
+                <div class="mx-2">
+                    {{if gt .DecreeCount 500}}
+                    <small class="border bg-light px-2 py-1 rounded text-center">500+</small>
+                    {{else}}
+                    <small class="border bg-light px-2 rounded text-center">{{.DecreeCount}}</small>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-5 mb-5">
+
+            <ul class="col-10 offset-1 ">
+                {{if .SearchDecreeRes}}
+                {{range .SearchDecreeRes}}
+                <li class="col-8 offset-2 list-group-item">
+                    <a href="decree?decid={{.Id}}">{{.Name}}</a>
+                </li>
+                {{end}}
+                {{else}}
+                <p class="text-center w-100 my-3">検索結果はありません。</p>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        for (const arrayElement of document.querySelectorAll('.userProfile')) {
+            arrayElement.innerHTML =  marked.parse(arrayElement.innerHTML);
+        }
+    </script>
+</main>
+</body>
+</html>

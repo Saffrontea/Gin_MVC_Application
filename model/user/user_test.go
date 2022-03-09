@@ -32,7 +32,7 @@ func TestUser(t *testing.T) {
 		//UserId:       0,
 		Name:     "斉藤",
 		Ruby:     "サイトウ",
-		Username: "saito",
+		UserID:   "saito",
 		Password: "asdfgdf",
 		Tel:      "03000000000",
 		Location: 0,

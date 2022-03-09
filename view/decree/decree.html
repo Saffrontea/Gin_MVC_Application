@@ -2,311 +2,436 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>{{.LawBody.LawTitle.Text}}</title>
-<!--    <style>-->
-<!--        div.article{-->
-<!--            border: 1px #000 solid;-->
-<!--        }-->
-<!--        body{-->
-<!--            text-align: center;-->
-<!--        }-->
-<!--        table{-->
-<!--            display: flex;-->
-<!--            justify-content: center;-->
-<!--            flex-direction: row;-->
-<!--        }-->
-<!--    </style>-->
+    {{template "head" .}}
+    <title>{{.Law.LawBody.LawTitle.Text}} - GitLaw</title>
 </head>
-<body>
-  {{with .Law}}
-    <h2 class="lawNum">{{.LawNum}}</h2>
-  {{if .LawBody}}
-    <h2 class="lawTitle">{{.LawBody.LawTitle.Text}}</h2>
-  <div class="main">
-      {{if .LawBody.EnactStatement}}
-      <div class="enactStatement">
-        {{range .LawBody.EnactStatement}}
-        <p>{{.Text}}</p>
-        {{end}}
-      </div>
-      {{end}}
-      {{with .LawBody.MainProvision}}
-      <div class="mainProvision">
-          {{if .Part}}
-                <div class="part">
-                {{range .Part}}
-                    {{template "Part" .}}
-                {{end}}
-                </div>
-            {{end}}
-          {{with .Chapter}}
-            <div class="chapter">
-                {{range .}}
-                    {{template "Chapter" .}}
-                {{end}}
-            </div>
-          {{end}}
-          {{with .Section}}
-            <div class="section">
-                {{range .}}
-                    {{template "Section" .}}
-                {{end}}
-            </div>
-          {{end}}
-          {{with .Article}}
-            <div class="article">
-                {{range .}}
-                    {{template "Article" .}}
-                {{end}}
-            </div>
-          {{end}}
-          {{with .Paragraph}}
-            <div class="paragraph">
-                {{range .}}
-                    {{template "Paragraph" .}}
-                {{end}}
-            </div>
-          {{end}}
-      </div>
-      {{end}}
-  </div>
-  {{end}}
-{{end}}
+<body class="bg-white">
+{{template "header" .}}
+<div class="container-fluid">
+    {{with .Law}}
+    {{if .LawBody}}
+    <div class="row py-5 border-bottom bg-default mb-5">
+        <div class="col-10 offset-1">
+            <h1 class="mb-3 text-muted"><a><small>{{.LawNum}}</small></a></h1>
+            <h2 class="text-primary mb-3 h4">{{.LawBody.LawTitle.Text}}</h2>
+        </div>
+    </div>
 
+    <div class="row mb-3">
+        <div class="col-8 offset-3 px-0">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-secondary btn-sm mx-3"
+                        onclick="location.href='/discussList?decid={{$.id}}'">議論一覧
+                </button>
+                <button class="btn btn-success btn-sm" onclick="location.href='#discuss'">新規議論作成</button>
+
+            {{with $.revisions}}
+                <select class="form-control form-control-sm w-25 mx-3"
+                        onchange="location.href='decree?decid={{$.id}}'+this.options[this.selectedIndex].value">
+                    {{range $i,$v := $.revisions}}
+                    {{if eq $i 0}}
+                    <option value="">最新版</option>
+                    {{else}}
+                    {{if eq $v.String $.rev}}
+                    <option value="&rev={{$v}}" selected>旧版{{$i}}</option>
+                    {{else}}
+                    <option value="&rev={{$v}}">旧版{{$i}}</option>
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                </select>
+            {{end}}
+            {{if $.star}}
+            <button class="btn btn-warning btn-sm text-body" onclick="location.href='/removeStar?decid={{$.id}}'">
+                &nbsp;★&nbsp;
+            </button>
+            {{else}}
+            <button class="btn btn-outline-warning btn-sm" onclick="location.href='/addStar?decid={{$.id}}'">
+                &nbsp;☆&nbsp;
+            </button>
+            {{end}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-10 offset-1 card p-4 bg-default">
+            {{if $.msg }}
+            <div style="background: green"><p>{{$.msg}}</p></div>
+            {{end}}
+            <div class="main">
+                {{if .LawBody.EnactStatement}}
+                <div class="enactStatement">
+                    {{range .LawBody.EnactStatement}}
+                    <p>{{.Text}}</p>
+                    {{end}}
+                </div>
+                {{end}}
+                {{with .LawBody.MainProvision}}
+                <div class="mainProvision">
+                    {{if .Part}}
+                    <div class="part">
+                        {{range .Part}}
+                        {{template "Part" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Chapter}}
+                    <div class="chapter">
+                        {{range .}}
+                        {{template "Chapter" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Section}}
+                    <div class="section">
+                        {{range .}}
+                        {{template "Section" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Article}}
+                    <div class="article">
+                        {{range .}}
+                        {{template "Article" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Paragraph}}
+                    <div class="paragraph">
+                        {{range .}}
+                        {{template "Paragraph" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+                {{end}}
+                {{with .LawBody.SupplProvision}}
+                {{range .}}
+                <div class="supplProvision">
+                    {{with .SupplProvisionLabel}}
+                    <p>{{.Text}}</p>
+                    {{end}}
+                    {{with .Chapter}}
+                    <div class="chapter">
+                        {{range .}}
+                        {{template "Chapter" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Article}}
+                    <div class="article">
+                        {{range .}}
+                        {{template "Article" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{with .Paragraph}}
+                    <div class="paragraph">
+                        {{range .}}
+                        {{template "Paragraph" .}}
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+                {{end}}
+                {{end}}
+            </div>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+
+    <div class="row mb-2" id="discuss">
+        <div class="col-8 offset-2">
+            <h3 class="h4 border-bottom pb-3">新規議論作成</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="" class="col-8 offset-2 mb-5">
+            <div class="card m-4 p-5">
+                <form action="createDiscuss?decid={{.id}}" method="post" class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-8">
+                            <label class="w-100">
+                                <p>タイトル</p>
+                                <input type="text" name="title" class="form-control">
+                            </label>
+                        </div>
+                        <div class="col-3 offset-1">
+                            <label class="w-100">
+                                <p>種類</p>
+                                <select name="type" class="form-control">
+                                    <option value="0">疑問</option>
+                                    <option value="1">議論</option>
+                                    <option value="2">相談</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="w-100">
+                                <p>内容</p>
+                                <textarea id='content' name="content" class="form-control " rows="10" cols="70" maxlength="500"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-end">
+                                <input type="submit" value="議論を作成する" class="btn-primary btn">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("content"),
+        spellChecker: false
+    });
+</script>
 </body>
 </html>
 
 
 {{define "Part" }}
-    {{if .PartTitle}}
-        <p>{{.PartTitle.Text}}</p>
+{{if .PartTitle}}
+<p>{{.PartTitle.Text}}</p>
+{{end}}
+{{if .Article}}
+<div class="article">
+    {{range .Article}}
+    {{template "Article" .}}
     {{end}}
-    {{if .Article}}
-    <div class="article">
-        {{range .Article}}
-            {{template "Article" .}}
-        {{end}}
-    </div>
+</div>
+{{end}}
+{{if .Chapter}}
+<div class="chapter">
+    {{range .Chapter}}
+    {{template "Chapter" .}}
     {{end}}
-    {{if .Chapter}}
-    <div class="chapter">
-        {{range .Chapter}}
-            {{template "Chapter" .}}
-        {{end}}
-    </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Article"  }}
-    {{if .ArticleCaption}}
-        <p>{{.ArticleCaption.Text}}</p>
-    {{end}}
-    {{if .ArticleTitle}}
-        <p>{{.ArticleTitle.Text}}</p>
+{{if .ArticleCaption}}
+<p>{{.ArticleCaption.Text}}</p>
+{{end}}
+{{if .ArticleTitle}}
+<p>{{.ArticleTitle.Text}}</p>
 
+{{end}}
+{{if .Paragraph}}
+<div class="paragraph">
+    {{range .Paragraph}}
+    {{template "Paragraph" .}}
     {{end}}
-    {{if .Paragraph}}
-    <div class="paragraph">
-        {{range .Paragraph}}
-            {{template "Paragraph" .}}
-        {{end}}
-    </div>
-    {{end}}
-    {{if .SupplNote}}
-        <p class="supple--note">{{.SupplNote.Text}}</p>
-    {{end}}
+</div>
+{{end}}
+{{if .SupplNote}}
+<p class="supple--note">{{.SupplNote.Text}}</p>
+{{end}}
 {{end}}
 
 {{define "Chapter"  }}
-    {{if .ChapterTitle}}
-        <p class="chapter--title">{{.ChapterTitle.Text}}</p>
+{{if .ChapterTitle}}
+<p class="chapter--title">{{.ChapterTitle.Text}}</p>
+{{end}}
+{{if .Article}}
+<div class="article">
+    {{range .Article}}
+    {{template "Article" .}}
     {{end}}
-    {{if .Article}}
-        <div class="article">
-            {{range .Article}}
-                {{template "Article" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .Section}}
+<div class="section">
+    {{range .Section}}
+    {{template "Section" .}}
     {{end}}
-    {{if .Section}}
-        <div class="section">
-            {{range .Section}}
-                {{template "Section" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Section"  }}
-    {{if .SectionTitle}}
-        <p>{{.SectionTitle.Text}}</p>
+{{if .SectionTitle}}
+<p>{{.SectionTitle.Text}}</p>
+{{end}}
+{{if .Article}}
+<div class="article">
+    {{range .Article}}
+    {{template "Article" .}}
     {{end}}
-    {{if .Article}}
-        <div class="article">
-            {{range .Article}}
-            {{template "Article" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .Subsection}}
+<div class="subsection">
+    {{range .Subsection}}
+    {{template "Subsection" .}}
     {{end}}
-    {{if .Subsection}}
-        <div class="subsection">
-            {{range .Subsection}}
-            {{template "Subsection" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .Division}}
+<div class="division">
+    {{range .Division}}
+    {{template "Division" .}}
     {{end}}
-    {{if .Division}}
-        <div class="division">
-            {{range .Division}}
-            {{template "Division" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Subsection"  }}
-    {{if .SubsectionTitle}}
-        <p class="subsection--title">{{.SubsectionTitle.Text}}</p>
+{{if .SubsectionTitle}}
+<p class="subsection--title">{{.SubsectionTitle.Text}}</p>
+{{end}}
+{{if .Article}}
+<div class="article">
+    {{range .Article}}
+    {{template "Article" .}}
     {{end}}
-    {{if .Article}}
-        <div class="article">
-            {{range .Article}}
-                {{template "Article" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .Division}}
+<div class="division">
+    {{range .Division}}
+    {{template "Division" .}}
     {{end}}
-    {{if .Division}}
-        <div class="division">
-            {{range .Division}}
-                {{template "Division" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Paragraph"  }}
-    {{if .ParagraphCaption}}
-        <p class="paragraph--caption">{{.ParagraphCaption.Text}}</p>
+{{if .ParagraphCaption}}
+<p class="paragraph--caption">{{.ParagraphCaption.Text}}</p>
+{{end}}
+{{if .ParagraphNum}}
+<p class="paragraph--num>">{{.ParagraphNum.Text}}</p>
+{{end}}
+{{if .ParagraphSentence}}
+{{range .ParagraphSentence.Sentence}}
+<p class="paragraph--sentence>">{{.}}</p>
+{{end}}
+{{end}}
+{{if .AmendProvision}}
+<div class="amendprovision">
+    {{range .AmendProvision}}
+    {{template "AmendProvision" .}}
     {{end}}
-    {{if .ParagraphNum}}
-        <p class="paragraph--num>">{{.ParagraphNum.Text}}</p>
+</div>
+{{end}}
+{{with .Item}}
+<div class="item">
+    {{range .}}
+    {{template "Item" .}}
     {{end}}
-    {{if .ParagraphSentence}}
-        {{range .ParagraphSentence.Sentence}}
-            <p class="paragraph--sentence>">{{.}}</p>
-        {{end}}
-    {{end}}
-    {{if .AmendProvision}}
-        <div class="amendprovision">
-            {{range .AmendProvision}}
-                {{template "AmendProvision" .}}
-            {{end}}
-        </div>
-    {{end}}
-    {{with .Item}}
-        <div class="item">
-            {{range .}}
-                {{template "Item" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Division"  }}
-    {{if .DivisionTitle}}
-        <p class="division--title">{{.DivisionTitle}}</p>
+{{if .DivisionTitle}}
+<p class="division--title">{{.DivisionTitle}}</p>
+{{end}}
+{{if .Article}}
+<div class="article">
+    {{range .Article}}
+    {{template "Article" .}}
     {{end}}
-    {{if .Article}}
-        <div class="article">
-            {{range .Article}}
-                {{template "Article" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Item"  }}
-    {{if .ItemTitle}}
-        <p class="item--title">{{.ItemTitle.Text}}</p>
+{{if .ItemTitle}}
+<p class="item--title">{{.ItemTitle.Text}}</p>
+{{end}}
+{{with .ItemSentence}}
+<div class="sentence">
+    {{template "Sentence" .}}
+</div>
+{{end}}
+{{if .Subitem1}}
+<div class="subitem1">
+    {{range .Subitem1}}
+    {{template "Subitem1" .}}
     {{end}}
-    {{with .ItemSentence}}
-    <div class="sentence">
-        {{template "Sentence" .}}
-    </div>
+</div>
+{{end}}
+{{if .TableStruct}}
+<div class="tablestruct">
+    {{range .TableStruct}}
+    {{template "TableStruct" .}}
     {{end}}
-    {{if .Subitem1}}
-        <div class="subitem1">
-            {{range .Subitem1}}
-                {{template "Subitem1" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .FigStruct}}
+<div class="figStruct">
+    {{range .FigStruct}}
+    {{template "FigStruct" .}}
     {{end}}
-    {{if .TableStruct}}
-        <div class="tablestruct">
-            {{range .TableStruct}}
-                    {{template "TableStruct" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .StyleStruct}}
+<div class="stylestruct">
+    {{range .StyleStruct}}
+    {{template "StyleStruct" .}}
     {{end}}
-    {{if .FigStruct}}
-        <div class="figStruct">
-            {{range .FigStruct}}
-                {{template "FigStruct" .}}
-            {{end}}
-        </div>
+</div>
+{{end}}
+{{if .List}}
+<div class="list">
+    {{range .List}}
+    {{template "List" .}}
     {{end}}
-    {{if .StyleStruct}}
-        <div class="stylestruct">
-            {{range .StyleStruct}}
-                {{template "StyleStruct" .}}
-            {{end}}
-        </div>
-    {{end}}
-    {{if .List}}
-        <div class="list">
-            {{range .List}}
-                {{template "List" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "Sentence"  }}
-    {{range .Sentence}}
-        <p class="sentence--p">{{.}}</p>
-    {{end}}
-    {{range $columnIndex , $columnData := .Column}}
-        {{if eq $columnIndex 0}}
-             <p class="sentence--title">{{$columnData}}</p>
-         {{else}}
-            <p class="sentence--col">{{$columnData}}</p>
-        {{end}}
-    {{end}}
-    {{with .Table}}
-    <p class="sentence--table">{{.}}</p>
-    {{/*<!--TODO-->*/}}
-    {{end}}
+{{range .Sentence}}
+<p class="sentence--p">{{.}}</p>
+{{end}}
+{{range $columnIndex , $columnData := .Column}}
+{{if eq $columnIndex 0}}
+<p class="sentence--title">{{$columnData}}</p>
+{{else}}
+<p class="sentence--col">{{$columnData}}</p>
+{{end}}
+{{end}}
+{{with .Table}}
+<p class="sentence--table">{{.}}</p>
+{{/*<!--TODO-->*/}}
+{{end}}
 {{end}}
 
 
 {{define "AmendProvision"  }}
-    {{if .AmendProvisionSentence}}
-        <p class="amendprovision-sentence">{{.AmendProvisionSentence.Sentence}}</p>
+{{if .AmendProvisionSentence}}
+<p class="amendprovision-sentence">{{.AmendProvisionSentence.Sentence}}</p>
+{{end}}
+{{if .NewProvision}}
+<div class="new--provision">
+    {{range .NewProvision}}
+    {{template "NewProvision" .}}
     {{end}}
-    {{if .NewProvision}}
-        <div class="new--provision">
-            {{range .NewProvision}}
-                {{template "NewProvision" .}}
-            {{end}}
-        </div>
-    {{end}}
+</div>
+{{end}}
 {{end}}
 
 {{define "TableStruct"  }}
-    <p class="tablestruct--title">{{.TableStructTitle}}</p>
-    {{with .Table}}
-       {{template "Table" .}}
-    {{end}}
+<p class="tablestruct--title">{{.TableStructTitle}}</p>
+{{with .Table}}
+{{template "Table" .}}
+{{end}}
 {{end}}
 
 {{define "Table"  }}
@@ -411,55 +536,55 @@
 
 
 {{define "FigStruct"  }}
-    {{with .FigStructTitle}}
-        <p class="">{{.Text}}</p>
+{{with .FigStructTitle}}
+<p class="">{{.Text}}</p>
 <!--TODO-->
+{{end}}
+{{with .Remarks}}
+<div class="remarks">
+    {{range .}}
+    {{template "Remarks" .}}
     {{end}}
-    {{with .Remarks}}
-        <div class="remarks">
-        {{range .}}
-        {{template "Remarks" .}}
-        {{end}}
-        </div>
-    {{end}}
-    {{if .Fig}}
-        <img src="{{.Fig.SrcAttr}}" alt="{{.FigStructTitle}}">
-    {{end}}
+</div>
+{{end}}
+{{if .Fig}}
+<img src="{{.Fig.SrcAttr}}" alt="{{.FigStructTitle}}">
+{{end}}
 {{end}}
 
 {{define "StyleStruct"  }}
-    {{if .Text}}
-        <p>{{.Text}}</p>
+{{if .Text}}
+<p>{{.Text}}</p>
 {{/*<!--TODO-->*/}}
-    {{end}}
+{{end}}
 {{end}}
 {{define "Remarks"  }}
 
 {{end}}
 
 {{define "List"  }}
-    {{with .ListSentence}}
-    {{end}}
-    {{with .Sublist1}}
-    {{end}}
+{{with .ListSentence}}
+{{end}}
+{{with .Sublist1}}
+{{end}}
 {{end}}
 
 {{define "ListSentence"}}
-    {{with .Sentence}}
-        {{range .}}
-            <p>{{.}}</p>
-        {{end}}
-    {{end}}
-    {{with .Column}}
-        {{range .}}
-            <p>{{.}}</p>
-        {{end}}
-    {{end}}
+{{with .Sentence}}
+{{range .}}
+<p>{{.}}</p>
+{{end}}
+{{end}}
+{{with .Column}}
+{{range .}}
+<p>{{.}}</p>
+{{end}}
+{{end}}
 {{end}}
 {{define "NewProvision"  }}
-    {{if .LawTitle}}
-        <p class="lawTitle">{{.LawTitle.Text}}</p>
-    {{end}}
+{{if .LawTitle}}
+<p class="lawTitle">{{.LawTitle.Text}}</p>
+{{end}}
 {{end}}
 
 <!--Complete:

@@ -8,6 +8,7 @@ import (
 	"Gin_MVC/model/notify"
 	"Gin_MVC/model/priority"
 	"Gin_MVC/model/user"
+	"log"
 	"os"
 	"path"
 	"testing"
@@ -16,17 +17,23 @@ import (
 
 func TestInsertDB(t *testing.T) {
 	_ = database.DBConnection()
-	database.Migrator([]interface{}{&user.User{}, &decree.Decree{}, &notify.Notify{}, &priority.Priority{}, &discuss.Discuss{}})
+	err := database.Migrator([]interface{}{&user.User{}, &decree.Decree{}, &notify.Notify{}, &priority.Priority{}, &discuss.Discuss{}})
+	if err != nil {
+		panic(err)
+		return
+	}
+	log.Println("aa")
 	dir, err := os.ReadDir("resource/decree")
 	if err != nil {
-		return
-		// panic(err)
+		//return
+		panic(err)
 	}
+	log.Println("bb")
 	for _, entry := range dir {
 		open, err := os.Open(path.Join("resource", "decree", entry.Name(), entry.Name()+".xml"))
 		if err != nil {
-			// panic(err)
-			return
+			panic(err)
+			//return
 		}
 		law, err := law.CreateLaw(open)
 		if err != nil {
